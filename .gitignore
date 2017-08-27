@@ -27,7 +27,6 @@ npm-debug.log
 
 # project ignores
 !.gitkeep
-+package-lock.json
 *__temp
 node_modules
 /docs
