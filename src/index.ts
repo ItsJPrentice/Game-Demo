@@ -2,6 +2,7 @@ import * as PIXI from 'pixi.js';
 import { AssetsService } from './services/assets.service';
 import { SpriteService } from './services/sprite.service';
 import { RendererService } from './services/renderer.service';
+import { KeyboardService } from './services/keyboard.service';
 import { Stage } from './stages/stage';
 import { DefaultStage } from './stages/default.stage';
 
@@ -13,6 +14,7 @@ class Samplin {
 
   constructor() {
     AssetsService.loadAssets(this._onAssetsLoaded.bind(this));
+    KeyboardService.init();
   }
 
   private _onAssetsLoaded(): void {
