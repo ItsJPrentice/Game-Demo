@@ -3,6 +3,7 @@ import { AssetsService } from './services/assets.service';
 import { SpriteService } from './services/sprite.service';
 import { RendererService } from './services/renderer.service';
 import { KeyboardService } from './services/keyboard.service';
+import { GameLoopService } from './services/gameLoop.service';
 import { Stage } from './stages/stage';
 import { DefaultStage } from './stages/default.stage';
 
@@ -19,13 +20,11 @@ class Samplin {
 
   private _onAssetsLoaded(): void {
     this._stage = new DefaultStage();
-    this._gameLoop();
+    GameLoopService.loop.subscribe(() => this._update());
   }
 
-  private _gameLoop(): void {
-    this._stage.update();
+  private _update(): void {
     RendererService.renderer.render(this._stage.container);
-    window.requestAnimationFrame(this._gameLoop.bind(this));
   }
 
 }
