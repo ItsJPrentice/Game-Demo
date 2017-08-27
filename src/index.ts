@@ -18,7 +18,6 @@ class Samplin {
   }
 
   private _onAssetsLoaded(): void {
-    SpriteService.generateSprites();
     this._stage = new DefaultStage();
     this._gameLoop();
   }

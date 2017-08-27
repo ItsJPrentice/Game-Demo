@@ -2,17 +2,17 @@ import * as PIXI from 'pixi.js';
 import * as _ from 'lodash';
 import { SpriteService } from './sprite.service';
 
-export class AssetsService {
+const SpriteAssets = [ 'background', 'token1', 'token2', 'token3' ];
 
-  private static _areAssetsLoaded = false;
+export class AssetsService {
 
   private constructor() { }
 
   public static loadAssets(callback: () => void): void {
-    _.each(SpriteService.Sprites, (sprite: PIXI.Sprite, name: string) => {
+    _.each(SpriteAssets, name => {
       PIXI.loader.add(name, require('../assets/images/' + name + '.png'));
     });
-    PIXI.loader.load(() => { this._areAssetsLoaded = true; callback(); });
+    PIXI.loader.load(() => { callback(); });
   }
 
 }
