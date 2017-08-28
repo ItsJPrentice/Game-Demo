@@ -3,7 +3,7 @@ import { SpriteService } from '../services/sprite.service';
 
 export class Stage {
 
-  protected _container: PIXI.Container;
+  protected _container = new PIXI.Container();
 
   constructor() { }
 
@@ -11,9 +11,4 @@ export class Stage {
     return this._container;
   }
 
-  protected _init(): void {
-  }
-
-  public update(): void {
-  }
 }

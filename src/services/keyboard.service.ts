@@ -4,15 +4,18 @@ export class KeyboardService {
 
   private constructor() { }
 
-  public static keyPresses: Observable<KeyboardEvent>;
+  private static _keyDowns: Observable<KeyboardEvent> = Observable.fromEvent(document, 'keydown');
+  private static _keyUps: Observable<KeyboardEvent> = Observable.fromEvent(document, 'keyup');
+  private static _keyPresses: Observable<KeyboardEvent>;
 
-  public static init(): void {
-    let keyDowns: Observable<KeyboardEvent> = Observable.fromEvent(document, 'keydown'),
-        keyUps: Observable<KeyboardEvent> = Observable.fromEvent(document, 'keyup');
-    this.keyPresses = keyDowns.merge(keyUps)
-                              .groupBy((e) => e.keyCode)
-                              .map(group => group.distinctUntilChanged(null, e => e.type))
-                              .mergeAll();
+  public static get keyPresses(): Observable<KeyboardEvent> {
+    if (!this._keyPresses) {
+      this._keyPresses = this._keyDowns.merge(this._keyUps)
+        .groupBy((e) => e.keyCode)
+        .map(group => group.distinctUntilChanged(null, e => e.type))
+        .mergeAll();
+    }
+    return this._keyPresses;
   }
 
 }
