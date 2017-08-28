@@ -16,11 +16,19 @@ export class DefaultStage extends Stage {
 
   constructor() {
     super();
+    this._setupBackground();
+    this._setupPlayer();
+  }
+
+  private _setupBackground(): void {
     this.container.addChild(SpriteService.getSprite('background'));
+  }
+
+  private _setupPlayer(): void {
     this._player = new Player(true);
-    this.container.addChild(this._player.sprite);
     this._player.sprite.position.set(8,8);
     this._player.setBoundary(this._boundary);
+    this.container.addChild(this._player.sprite);
   }
 
 }
