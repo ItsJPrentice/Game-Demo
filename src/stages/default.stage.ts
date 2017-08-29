@@ -21,7 +21,7 @@ export class DefaultStage extends Stage {
   }
 
   private _setupBackground(): void {
-    this.container.addChild(SpriteService.getSprite('background'));
+    this.container.addChild(SpriteService.getSprite('background.png'));
   }
 
   private _setupPlayer(): void {

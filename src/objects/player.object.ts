@@ -7,7 +7,7 @@ export class Player extends BaseObject {
 
   constructor(hasKeyboardControl: boolean = false) {
     super(hasKeyboardControl);
-    this.sprite = SpriteService.getSprite('token1');
+    this.sprite = SpriteService.getSprite('token1.png');
   }
 
 }

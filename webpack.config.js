@@ -1,18 +1,24 @@
 const path = require('path');
+const fs = require('fs');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
+const GenerateJsonPlugin = require('generate-json-webpack-plugin');
 
 module.exports = {
-  entry: './src/index.ts',
+  context: path.resolve(__dirname, 'src'),
+  entry: './index.ts',
   module: {
     rules: [
       {
         test: /\.ts$/,
-        use: 'ts-loader',
-        exclude: /node_modules/
+        use: 'ts-loader'
+      },
+      {
+        test: /\.json$/,
+        loader: 'json-loader'
       },
       {
         test: /\.(png|svg|jpg|gif)$/,
-        use: 'file-loader'
+        loader: 'file-loader'
       },
       {
         test: /\.scss$/,
@@ -48,5 +54,12 @@ module.exports = {
   devServer: {
     contentBase: path.join(__dirname, 'dist')
   },
-  plugins: [new HtmlWebpackPlugin()]
+  plugins: [
+    new HtmlWebpackPlugin(),
+    new GenerateJsonPlugin('sprite-assets-manifest.json', getSpriteAssetsManifest())
+  ]
+}
+
+function getSpriteAssetsManifest() {
+  return fs.readdirSync(path.resolve(__dirname, 'src/assets/sprites'));
 }
