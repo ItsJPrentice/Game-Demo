@@ -37,8 +37,8 @@ export class DefaultStage extends Stage {
   
   private _setupPlayers(): void {
     this._player = new Player();
-    this._hero.setPlayer(this._player);
     this._player.inputStream = KeyboardService.keyPresses;
+    this._hero.setPlayer(this._player);
   }
 
 }
