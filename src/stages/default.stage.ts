@@ -1,7 +1,7 @@
 import * as PIXI from 'pixi.js';
 import { Stage } from './stage';
+import { KeyboardInput } from '../inputs/keyboard.input';
 import { SpriteService } from '../services/sprite.service';
-import { KeyboardService } from '../services/keyboard.service';
 import { IBoundary } from '../actors/actor';
 import { Hero } from '../actors/hero.actor';
 import { Player } from '../players/player';
@@ -37,7 +37,7 @@ export class DefaultStage extends Stage {
   
   private _setupPlayers(): void {
     this._player = new Player();
-    this._player.inputStream = KeyboardService.keyPresses;
+    setTimeout(() => this._player.input = new KeyboardInput().stream, 2000);
     this._hero.setPlayer(this._player);
   }
 

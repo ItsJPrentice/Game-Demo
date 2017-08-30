@@ -1,6 +1,6 @@
 import { KeyboardService } from '../services/keyboard.service';
 import { GameLoopService } from '../services/gameLoop.service';
-import { Player } from '../players/player';
+import { Player, IPlayerEvent } from '../players/player';
 
 export interface IVelocity {
   x: number,
@@ -26,9 +26,7 @@ export class Actor {
   }
 
   public setPlayer(player: Player): void {
-    player.outputStream.subscribe(event => {
-      this._onKeyPress(event);
-    });
+    player.stream.subscribe(event => this._onPlayerEvent(event));
   }
   
   protected _update(): void {
@@ -37,12 +35,12 @@ export class Actor {
     this._checkBoundary();
   }
 
-  protected _onKeyPress(event: KeyboardEvent): void {
-    switch (event.code) {
-      case 'ArrowUp':    this._velocity.y -= (event.type === 'keydown' ? 1 : -1); break;
-      case 'ArrowRight': this._velocity.x += (event.type === 'keydown' ? 1 : -1); break;
-      case 'ArrowDown':  this._velocity.y += (event.type === 'keydown' ? 1 : -1); break;
-      case 'ArrowLeft':  this._velocity.x -= (event.type === 'keydown' ? 1 : -1); break;
+  protected _onPlayerEvent(event: IPlayerEvent): void {
+    switch (event.name) {
+      case 'moveUp':    this._velocity.y -= (event.type === 'start' ? 1 : -1); break;
+      case 'moveRight': this._velocity.x += (event.type === 'start' ? 1 : -1); break;
+      case 'moveDown':  this._velocity.y += (event.type === 'start' ? 1 : -1); break;
+      case 'moveLeft':  this._velocity.x -= (event.type === 'start' ? 1 : -1); break;
       default: break;
     }
   }

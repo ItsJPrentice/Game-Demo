@@ -1,21 +1,45 @@
 import { Observable, BehaviorSubject, Subscription } from 'rxjs';
 
+export interface IPlayerEvent {
+  type: string;
+  name: string;
+}
+
 export class Player {
 
-  private _inputStream: BehaviorSubject<any>; //TODO: Define Input Generic Class
-  private _outputStream: Observable<any>; // TODO Define Event Stream Generic Class;
+  private _input: BehaviorSubject<Observable<KeyboardEvent>>;
+  private _stream: Observable<IPlayerEvent>;
 
   constructor() {
-    this._inputStream = new BehaviorSubject<Observable<any>>(Observable.empty());
-    this._outputStream = this._inputStream.asObservable().switchMap(stream => stream);
+    this._input = new BehaviorSubject<Observable<KeyboardEvent>>(Observable.empty<KeyboardEvent>());
+    this._stream = this._input
+                             .asObservable()
+                             .switchMap(event => event)
+                             .map(this._mapKeyboardEventToPlayerEvent);
   }
 
-  public set inputStream(inputStream: Observable<any>) {
-    this._inputStream.next(inputStream);
+  public set input(input: Observable<KeyboardEvent>) {
+    this._input.next(input);
   }
 
-  public get outputStream(): Observable<any> {
-    return this._outputStream;
+  public get stream(): Observable<IPlayerEvent> {
+    return this._stream;
+  }
+
+  private _mapKeyboardEventToPlayerEvent(keyboardEvent: KeyboardEvent): IPlayerEvent {
+    let playerEvent: IPlayerEvent = {
+      type:  keyboardEvent.type === 'keydown' ? 'start' : 'stop',
+      name: null
+    };
+    switch (keyboardEvent.code) {
+      case 'ArrowUp':    playerEvent.name = 'moveUp'; break;
+      case 'ArrowRight': playerEvent.name = 'moveRight'; break;
+      case 'ArrowDown':  playerEvent.name = 'moveDown'; break;
+      case 'ArrowLeft':  playerEvent.name = 'moveLeft'; break;
+      case 'Space':      playerEvent.name = 'action'; break;
+      default: break;
+    }
+    return playerEvent;
   }
   
 }
