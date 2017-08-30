@@ -1,5 +1,6 @@
 import { KeyboardService } from '../services/keyboard.service';
 import { GameLoopService } from '../services/gameLoop.service';
+import { Player } from '../players/player';
 
 export interface IVelocity {
   x: number,
@@ -13,16 +14,21 @@ export interface IBoundary {
   height: number
 }
 
-export class BaseObject {
+export class Actor {
   
   public sprite: PIXI.Sprite;
   protected _velocity: IVelocity;
   protected _boundary: IBoundary;
 
-  constructor(hasKeyboardControl: boolean = false) {
+  constructor() {
     this._velocity = { x: 0, y: 0 };
     GameLoopService.loop.subscribe(() => this._update());
-    if (hasKeyboardControl) KeyboardService.keyPresses.subscribe(event => this._onKeyPress(event));
+  }
+
+  public setPlayer(player: Player): void {
+    player.outputStream.subscribe(event => {
+      this._onKeyPress(event);
+    });
   }
   
   protected _update(): void {

@@ -1,11 +1,14 @@
 import * as PIXI from 'pixi.js';
 import { Stage } from './stage';
 import { SpriteService } from '../services/sprite.service';
-import { IBoundary } from '../objects/object';
-import { Player } from '../objects/player.object';
+import { KeyboardService } from '../services/keyboard.service';
+import { IBoundary } from '../actors/actor';
+import { Hero } from '../actors/hero.actor';
+import { Player } from '../players/player';
 
 export class DefaultStage extends Stage {
 
+  private _hero: Hero;
   private _player: Player;
   private _boundary: IBoundary = {
     x: 8,
@@ -17,18 +20,25 @@ export class DefaultStage extends Stage {
   constructor() {
     super();
     this._setupBackground();
-    this._setupPlayer();
+    this._setupActors();
+    this._setupPlayers();
   }
 
   private _setupBackground(): void {
     this.container.addChild(SpriteService.getSprite('background.png'));
   }
 
-  private _setupPlayer(): void {
-    this._player = new Player(true);
-    this._player.sprite.position.set(8,8);
-    this._player.setBoundary(this._boundary);
-    this.container.addChild(this._player.sprite);
+  private _setupActors(): void {
+    this._hero = new Hero();
+    this._hero.sprite.position.set(8,8);
+    this._hero.setBoundary(this._boundary);
+    this.container.addChild(this._hero.sprite);
+  }
+  
+  private _setupPlayers(): void {
+    this._player = new Player();
+    this._hero.setPlayer(this._player);
+    this._player.inputStream = KeyboardService.keyPresses;
   }
 
 }

@@ -4,6 +4,7 @@ import { RendererService } from './services/renderer.service';
 import { GameLoopService } from './services/gameLoop.service';
 import { Stage } from './stages/stage';
 import { DefaultStage } from './stages/default.stage';
+import { KeyboardService } from './services/keyboard.service';
 
 const AppStyles = require('./assets/styles/styles.scss');
 
