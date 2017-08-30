@@ -8,7 +8,7 @@ import { KeyboardService } from './services/keyboard.service';
 
 const AppStyles = require('./assets/styles/styles.scss');
 
-class Samplin {
+class Demo {
 
   private _stage: Stage;
 
@@ -27,4 +27,4 @@ class Samplin {
 
 }
 
-new Samplin();
+new Demo();
