@@ -1,4 +1,4 @@
-import { GameLoopService } from '../services/gameLoop.service';
+import { LoopService } from '../services/loop.service';
 import { Player, IPlayerEvent } from '../players/player';
 
 export interface IVelocity {
@@ -14,7 +14,7 @@ export class Actor {
 
   constructor() {
     this._velocity = { x: 0, y: 0 };
-    GameLoopService.loop.subscribe(() => this._update());
+    LoopService.gameLoop.subscribe(() => this._update());
   }
 
   public setPlayer(player: Player): void {

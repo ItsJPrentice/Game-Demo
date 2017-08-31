@@ -5,6 +5,7 @@ import { SpriteService } from '../services/sprite.service';
 import { Hero } from '../actors/hero.actor';
 import { Monster } from '../actors/monster.actor';
 import { Player } from '../players/player';
+import { LoopService } from '../services/loop.service';
 
 export class DefaultStage extends Stage {
 
@@ -17,6 +18,7 @@ export class DefaultStage extends Stage {
     this._setupBackground();
     this._setupActors();
     this._setupPlayers();
+    LoopService.gameLoop.subscribe(() => this._update());
   }
 
   private _setupBackground(): void {
@@ -38,6 +40,14 @@ export class DefaultStage extends Stage {
     this._player = new Player();
     this._player.input = new KeyboardInput().stream
     this._hero.setPlayer(this._player);
+  }
+
+  private _update(): void {
+    this._detectCollisions();
+  }
+
+  private _detectCollisions(): void {
+
   }
 
 }

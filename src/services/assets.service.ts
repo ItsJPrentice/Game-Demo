@@ -3,8 +3,6 @@ import { Observable, AjaxRequest, AjaxResponse } from 'rxjs';
 import * as _ from 'lodash';
 import { SpriteService } from './sprite.service';
 
-const SpriteAssets = [ 'background', 'token1', 'token2', 'token3' ];
-
 interface IAssetsManifest {
   id: string,
   filename: string
@@ -14,9 +12,9 @@ export class AssetsService {
 
   private constructor() { }
 
-  public static loadAssets(callback: () => void): void {
+  public static loadAssets(onLoad: () => void): void {
     this._loadSpriteAssetsFromManifest().subscribe(() => {
-      PIXI.loader.load(() => { callback(); });
+      PIXI.loader.load(onLoad);
     });
   }
 

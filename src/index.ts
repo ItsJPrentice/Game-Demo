@@ -1,7 +1,6 @@
 import * as PIXI from 'pixi.js';
 import { AssetsService } from './services/assets.service';
-import { RendererService } from './services/renderer.service';
-import { GameLoopService } from './services/gameLoop.service';
+import { LoopService } from './services/loop.service';
 import { Stage } from './stages/stage';
 import { DefaultStage } from './stages/default.stage';
 
@@ -9,6 +8,7 @@ const AppStyles = require('./assets/styles/styles.scss');
 
 class Demo {
 
+  private _renderer: PIXI.WebGLRenderer | PIXI.CanvasRenderer;
   private _stage: Stage;
 
   constructor() {
@@ -16,12 +16,23 @@ class Demo {
   }
 
   private _onAssetsLoaded(): void {
+    this._setupRenderer();
     this._stage = new DefaultStage();
-    GameLoopService.loop.subscribe(() => this._update());
+    LoopService.gameLoop.subscribe(() => this._update());
+  }
+
+  private _setupRenderer(): void {
+    let config: PIXI.RendererOptions = {
+      antialias: false,
+      transparent: false,
+      resolution: 1
+    }
+    this._renderer = PIXI.autoDetectRenderer(256, 256, config);
+    document.body.appendChild(this._renderer.view);
   }
 
   private _update(): void {
-    RendererService.renderer.render(this._stage.container);
+    this._renderer.render(this._stage.container);
   }
 
 }
