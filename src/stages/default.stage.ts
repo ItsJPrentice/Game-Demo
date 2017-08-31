@@ -10,17 +10,12 @@ import { Player } from '../players/player';
 export class DefaultStage extends Stage {
 
   private _hero: Hero;
-  private _player: Player;
 
   constructor() {
-    super();
-    this._setupMap();
-    this._setupProps();
-    this._setupActors();
-    this._setupPlayers();
+    super(true);
   }
 
-  private _setupMap(): void {
+  protected _setupMap(): void {
     this.container.addChild(SpriteService.getSprite('background.png'));
     this._boundary = {
       x: 0,
@@ -30,20 +25,20 @@ export class DefaultStage extends Stage {
     };
   }
 
-  private _setupProps(): void {
+  protected _setupProps(): void {
     this._addProp(new Prop(), new PIXI.Point(100, 100));
   }
 
-  private _setupActors(): void {
+  protected _setupActors(): void {
     this._hero = new Hero();
     this._addActor(this._hero, new PIXI.Point(128, 128));
     this._addActor(new Monster(), new PIXI.Point(150, 150));
   }
   
-  private _setupPlayers(): void {
-    this._player = new Player();
-    this._player.input = new KeyboardInput().stream
-    this._hero.setPlayer(this._player);
+  protected _setupPlayers(): void {
+    this._addPlayer(new Player());
+    this._players[0].input = new KeyboardInput().stream
+    this._hero.setPlayer(this._players[0]);
   }
 
 }
