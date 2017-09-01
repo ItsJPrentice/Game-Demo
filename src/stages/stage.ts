@@ -59,13 +59,12 @@ export class Stage {
   }
 
   protected _setupCollisionDetection(): void {
-    this._collisionDetector = new CollisionDetector(this._boundary.asObservable(),
-                                                    this._props.asObservable(),
+    this._collisionDetector = new CollisionDetector(this._props.asObservable(),
                                                     this._actors.asObservable());
   }
   
   protected _update(): void {
-    if (this._collisionDetector) this._collisionDetector.test();
+    if (this._collisionDetector) this._collisionDetector.checkCollisions();
   }
 
 }

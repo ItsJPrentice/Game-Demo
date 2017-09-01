@@ -1,6 +1,7 @@
 import * as PIXI from 'pixi.js';
 import * as UUID from 'uuid';
 import { SpriteService } from '../services/sprite.service';
+import { Collision} from '../collisions/collision';
 
 export class Entity {
   
@@ -14,6 +15,10 @@ export class Entity {
 
   public get sprite(): PIXI.Sprite {
     return this._sprite;
+  }
+
+  public collide(collision: Collision): void {
+    console.log(collision.type + ': ' + this.id + ' | ' + collision.entity.id);
   }
 
 }

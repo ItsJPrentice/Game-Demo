@@ -2,62 +2,38 @@ import * as PIXI from 'pixi.js';
 import * as _ from 'lodash';
 import { Observable, Subject } from 'rxjs';
 import { BoundaryEntity } from '../entities/boundary.entity';
-import { Prop } from '../props/prop';
-import { Actor } from '../actors/actor';
-import * as Collisions from './collisions';
+import { Entity } from '../entities/entity';
+import { Collision } from './collision';
 import { ContactCache } from './contact.cache';
 
 export class CollisionDetector {
 
-  private _collisions = new Subject<Collisions.Collision>();
-  private _boundary: BoundaryEntity;
-  private _props = <Prop[]>[];
-  private _actors = <Actor[]>[];
+  private _collisions = new Subject<Collision>();
+  private _staticEntities = <Entity[]>[];
+  private _dynamicEntities = <Entity[]>[];
   private _contactCache = new ContactCache();
 
-  constructor(boundary: Observable<BoundaryEntity>,
-              props: Observable<Prop[]>,
-              actors: Observable<Actor[]>) {
-    boundary.subscribe(boundary => this._onBoundaryUpdated(boundary));
-    props.subscribe(props => this._onPropsUpdated(props));
-    actors.subscribe(actors => this._onActorsUpdated(actors));   
-  }
-  
-  private _onBoundaryUpdated(boundary: BoundaryEntity): void {
-    this._boundary = boundary;
-  }
-  
-  private _onPropsUpdated(props: Prop[]): void {
-    this._props = props;
-  }
-  
-  private _onActorsUpdated(actors: Actor[]): void {
-    this._actors = actors;
+  constructor(staticEntities: Observable<Entity[]>, dynamicEntities: Observable<Entity[]>) {
+    staticEntities.subscribe(entities => this._staticEntities = entities);
+    dynamicEntities.subscribe(entities => this._dynamicEntities = entities);
   }
 
-  public test(): void {
-    this._checkActors();
+  public checkCollisions(): void {
+    _.each(this._dynamicEntities, this._checkDynamicEntity.bind(this));
   }
 
-  private _checkActors(): void {
-    _.each(this._actors, this._checkActor.bind(this));
+  private _checkDynamicEntity(dynamicEntity: Entity, index: number): void {
+    _.each(this._staticEntities,
+           staticEntity => this._checkEntityCollision(dynamicEntity, staticEntity));
+    _.each(_.slice(this._dynamicEntities, index + 1),
+           dynamicEntity2 => this._checkEntityCollision(dynamicEntity, dynamicEntity2));
   }
 
-  private _checkActor(actor: Actor, index: number): void {
-    if (this._boundary)
-    _.each(this._props, prop => this._checkPropCollision(actor, prop));
-    _.each(_.slice(this._actors, index + 1), otherActor => this._checkActorCollision(actor, otherActor));
-  }
-
-  private _checkPropCollision(actor: Actor, prop: Prop): void {
-    if (this._testIntersection(actor.sprite.getBounds(), prop.sprite.getBounds())) {
-      this._collisions.next();
-    }
-  }
-
-  private _checkActorCollision(actorA: Actor, actorB: Actor): void {
-    if (this._testIntersection(actorA.sprite.getBounds(), actorB.sprite.getBounds())) {
-      console.log('Actor collision');
+  private _checkEntityCollision(entity1: Entity, entity2: Entity): void {
+    if (this._testIntersection(entity1.sprite.getBounds(), entity2.sprite.getBounds())) {
+      this._onEntityCollision(entity1, entity2);
+    } else {
+      this._tryClearCollision(entity1, entity2);
     }
   }
 
@@ -68,5 +44,24 @@ export class CollisionDetector {
              (r2.y > (r1.y + r1.height)) ||
              ((r2.y + r2.height) < r1.y)
             );
+  }
+  
+  private _onEntityCollision(entity1: Entity, entity2: Entity): void {
+    if (this._contactCache.hasContact(entity1.id, entity2.id)) {
+      entity1.collide(new Collision(entity2, 'ongoing'));
+      entity2.collide(new Collision(entity1, 'ongoing'));
+    } else {
+      this._contactCache.setContact(entity1.id, entity2.id);
+      entity1.collide(new Collision(entity2, 'hit'));
+      entity2.collide(new Collision(entity1, 'hit'));
+    }
+  }
+  
+  private _tryClearCollision(entity1: Entity, entity2: Entity): void {
+    if (this._contactCache.hasContact(entity1.id, entity2.id)) {
+      this._contactCache.resetContact(entity1.id, entity2.id);
+      entity1.collide(new Collision(entity2, 'end'));
+      entity2.collide(new Collision(entity1, 'end'));
+    }
   }
 }
