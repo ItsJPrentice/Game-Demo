@@ -7,7 +7,7 @@ import { Actor } from '../actors/actor';
 import { Player } from '../players/player';
 import { KeyboardInput } from '../inputs/keyboard.input';
 import { LoopService } from '../services/loop.service';
-import { CollisionDetector } from '../utilities/collisionDetector';
+import { CollisionDetector } from '../collisions/collisionDetector';
 
 export class Stage {
 
