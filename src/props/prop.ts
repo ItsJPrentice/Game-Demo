@@ -1,11 +1,9 @@
-import { SpriteService } from '../services/sprite.service';
+import { Entity } from '../entities/entity';
 
-export class Prop {
-  
-  public sprite: PIXI.Sprite;
+export class Prop extends Entity {
 
-  constructor() {
-    this.sprite = SpriteService.getSprite('token2.png');
+  constructor(textureId: string) {
+    super(textureId);
   }
 
 }

@@ -2,6 +2,7 @@ import * as PIXI from 'pixi.js';
 import { Stage } from './stage';
 import { KeyboardInput } from '../inputs/keyboard.input';
 import { SpriteService } from '../services/sprite.service';
+import { BoundaryEntity } from '../entities/boundary.entity';
 import { Prop } from '../props/prop';
 import { Hero } from '../actors/hero.actor';
 import { Monster } from '../actors/monster.actor';
@@ -17,11 +18,11 @@ export class DefaultStage extends Stage {
 
   protected _setupMap(): void {
     this.container.addChild(SpriteService.getSprite('background.png'));
-    this._setBoundary(new PIXI.Rectangle(0, 0, 256, 256));
+    this._setBoundary(new BoundaryEntity(new PIXI.Rectangle(0, 0, 256, 256)));
   }
 
   protected _setupProps(): void {
-    this._addProp(new Prop(), new PIXI.Point(100, 100));
+    this._addProp(new Prop('token2.png'), new PIXI.Point(100, 100));
   }
 
   protected _setupActors(): void {

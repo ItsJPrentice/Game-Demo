@@ -1,3 +1,4 @@
+import { Entity } from '../entities/entity';
 import { LoopService } from '../services/loop.service';
 import { Player, IPlayerEvent } from '../players/player';
 
@@ -6,13 +7,14 @@ export interface IVelocity {
   y: number
 }
 
-export class Actor {
+export class Actor extends Entity {
   
   public sprite: PIXI.Sprite;
   protected _velocity: IVelocity;
   protected _isDoingAction: boolean;
 
-  constructor() {
+  constructor(textureId: string) {
+    super(textureId);
     this._velocity = { x: 0, y: 0 };
     LoopService.gameLoop.subscribe(() => this._update());
   }

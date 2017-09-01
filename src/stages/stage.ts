@@ -2,6 +2,7 @@ import * as PIXI from 'pixi.js';
 import * as _ from 'lodash';
 import { BehaviorSubject } from 'rxjs';
 import { SpriteService } from '../services/sprite.service';
+import { BoundaryEntity } from '../entities/boundary.entity';
 import { Prop } from '../props/prop';
 import { Actor } from '../actors/actor';
 import { Player } from '../players/player';
@@ -12,7 +13,7 @@ import { CollisionDetector } from '../collisions/collisionDetector';
 export class Stage {
 
   protected _container = new PIXI.Container();
-  protected _boundary = new BehaviorSubject<PIXI.Rectangle>(null);
+  protected _boundary = new BehaviorSubject<BoundaryEntity>(null);
   protected _props = new BehaviorSubject(<Prop[]>[]);
   protected _actors = new BehaviorSubject(<Actor[]>[]);
   protected _players = new BehaviorSubject(<Player[]>[]);
@@ -37,7 +38,7 @@ export class Stage {
   protected _setupActors(): void { }
   protected _setupPlayers(): void { }
   
-  protected _setBoundary(boundary: PIXI.Rectangle): void {
+  protected _setBoundary(boundary: BoundaryEntity): void {
     this._boundary.next(boundary);
   }
   

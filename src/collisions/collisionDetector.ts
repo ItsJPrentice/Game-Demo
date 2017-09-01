@@ -1,6 +1,7 @@
 import * as PIXI from 'pixi.js';
 import * as _ from 'lodash';
 import { Observable, Subject } from 'rxjs';
+import { BoundaryEntity } from '../entities/boundary.entity';
 import { Prop } from '../props/prop';
 import { Actor } from '../actors/actor';
 import * as Collisions from './collisions';
@@ -9,12 +10,12 @@ import { ContactCache } from './contact.cache';
 export class CollisionDetector {
 
   private _collisions = new Subject<Collisions.Collision>();
-  private _boundary: PIXI.Rectangle;
+  private _boundary: BoundaryEntity;
   private _props = <Prop[]>[];
   private _actors = <Actor[]>[];
   private _contactCache = new ContactCache();
 
-  constructor(boundary: Observable<PIXI.Rectangle>,
+  constructor(boundary: Observable<BoundaryEntity>,
               props: Observable<Prop[]>,
               actors: Observable<Actor[]>) {
     boundary.subscribe(boundary => this._onBoundaryUpdated(boundary));
@@ -22,7 +23,7 @@ export class CollisionDetector {
     actors.subscribe(actors => this._onActorsUpdated(actors));   
   }
   
-  private _onBoundaryUpdated(boundary: PIXI.Rectangle): void {
+  private _onBoundaryUpdated(boundary: BoundaryEntity): void {
     this._boundary = boundary;
   }
   
@@ -43,6 +44,7 @@ export class CollisionDetector {
   }
 
   private _checkActor(actor: Actor, index: number): void {
+    if (this._boundary)
     _.each(this._props, prop => this._checkPropCollision(actor, prop));
     _.each(_.slice(this._actors, index + 1), otherActor => this._checkActorCollision(actor, otherActor));
   }
