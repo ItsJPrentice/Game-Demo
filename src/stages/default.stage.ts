@@ -17,12 +17,7 @@ export class DefaultStage extends Stage {
 
   protected _setupMap(): void {
     this.container.addChild(SpriteService.getSprite('background.png'));
-    this._boundary = {
-      x: 0,
-      y: 0,
-      width: 256,
-      height: 256
-    };
+    this._setBoundary(new PIXI.Rectangle(0, 0, 256, 256));
   }
 
   protected _setupProps(): void {
@@ -36,9 +31,10 @@ export class DefaultStage extends Stage {
   }
   
   protected _setupPlayers(): void {
-    this._addPlayer(new Player());
-    this._players[0].input = new KeyboardInput().stream
-    this._hero.setPlayer(this._players[0]);
+    let player1 = new Player();
+    player1.input = new KeyboardInput().stream;
+    this._hero.setPlayer(player1);
+    this._addPlayer(player1);
   }
 
 }

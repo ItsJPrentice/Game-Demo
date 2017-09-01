@@ -1,4 +1,6 @@
 import * as PIXI from 'pixi.js';
+import * as _ from 'lodash';
+import { BehaviorSubject } from 'rxjs';
 import { SpriteService } from '../services/sprite.service';
 import { Prop } from '../props/prop';
 import { Actor } from '../actors/actor';
@@ -7,26 +9,17 @@ import { KeyboardInput } from '../inputs/keyboard.input';
 import { LoopService } from '../services/loop.service';
 import { CollisionDetector } from '../utilities/collisionDetector';
 
-export interface IBoundary {
-  x: number,
-  y: number,
-  width: number,
-  height: number
-}
-
 export class Stage {
 
   protected _container = new PIXI.Container();
-  protected _boundary: IBoundary;
-  protected _props = <Prop[]>[];
-  protected _actors = <Actor[]>[];
-  protected _players = <Player[]>[];
+  protected _boundary = new BehaviorSubject<PIXI.Rectangle>(null);
+  protected _props = new BehaviorSubject(<Prop[]>[]);
+  protected _actors = new BehaviorSubject(<Actor[]>[]);
+  protected _players = new BehaviorSubject(<Player[]>[]);
   protected _collisionDetector: CollisionDetector;
 
   constructor(detectCollisions: boolean) {
     this._container = new PIXI.Container();
-    this._props = [];
-    this._actors = [];
     this._setupMap();
     this._setupProps();
     this._setupActors();
@@ -44,24 +37,30 @@ export class Stage {
   protected _setupActors(): void { }
   protected _setupPlayers(): void { }
   
+  protected _setBoundary(boundary: PIXI.Rectangle): void {
+    this._boundary.next(boundary);
+  }
+  
   protected _addProp(prop: Prop, position?: PIXI.Point): void {
-    this._props.push(prop);
+    this._props.next(_.concat(this._props.value, prop));
     this.container.addChild(prop.sprite);
     if (position) prop.sprite.position = position;
   }
   
   protected _addActor(actor: Actor, position?: PIXI.Point): void {
-    this._actors.push(actor);
+    this._actors.next(_.concat(this._actors.value, actor));
     this.container.addChild(actor.sprite);
     if (position) actor.sprite.position = position;
   }
 
   protected _addPlayer(player: Player): void {
-    this._players.push(player);
+    this._players.next(_.concat(this._players.value, player));
   }
 
   protected _setupCollisionDetection(): void {
-    this._collisionDetector = new CollisionDetector();
+    this._collisionDetector = new CollisionDetector(this._boundary.asObservable(),
+                                                    this._props.asObservable(),
+                                                    this._actors.asObservable());
   }
   
   protected _update(): void {
