@@ -1,20 +1,22 @@
 import * as PIXI from 'pixi.js';
 import * as UUID from 'uuid';
-import { SpriteService } from '../services/sprite.service';
 import { Collision} from '../collisions/collision';
 
 export class Entity {
   
   readonly id: string;
-  protected _sprite: PIXI.Sprite;
+  protected _displayObject: PIXI.DisplayObject;
 
-  constructor(textureId?: string) {
+  constructor() {
     this.id = UUID.v4();
-    if (textureId) this._sprite = SpriteService.getSprite(textureId);
   }
 
-  public get sprite(): PIXI.Sprite {
-    return this._sprite;
+  public get displayObject(): PIXI.DisplayObject {
+    return this._displayObject;
+  }
+
+  public set displayObject(displayObject: PIXI.DisplayObject) {
+    this._displayObject = displayObject;
   }
 
   public collide(collision: Collision): void {

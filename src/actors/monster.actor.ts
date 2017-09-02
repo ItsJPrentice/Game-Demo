@@ -4,7 +4,8 @@ import { SpriteService } from '../services/sprite.service';
 export class Monster extends Actor {
 
   constructor() {
-    super('token3.png');
+    super();
+    this.displayObject = SpriteService.getSprite('token1.png');
   }
 
 }

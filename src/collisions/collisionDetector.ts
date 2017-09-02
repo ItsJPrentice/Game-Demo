@@ -1,7 +1,6 @@
 import * as PIXI from 'pixi.js';
 import * as _ from 'lodash';
 import { Observable, Subject } from 'rxjs';
-import { BoundaryEntity } from '../entities/boundary.entity';
 import { Entity } from '../entities/entity';
 import { Collision } from './collision';
 import { ContactCache } from './contact.cache';
@@ -30,7 +29,7 @@ export class CollisionDetector {
   }
 
   private _checkEntityCollision(entity1: Entity, entity2: Entity): void {
-    if (this._testIntersection(entity1.sprite.getBounds(), entity2.sprite.getBounds())) {
+    if (this._testIntersection(entity1.displayObject.getBounds(), entity2.displayObject.getBounds())) {
       this._onEntityCollision(entity1, entity2);
     } else {
       this._tryClearCollision(entity1, entity2);

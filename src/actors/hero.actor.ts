@@ -4,13 +4,12 @@ import { SpriteService } from '../services/sprite.service';
 export class Hero extends Actor {
 
   constructor() {
-    super('token1.png');
-    this.sprite.anchor.x = .5;
-    this.sprite.anchor.y = .5;
+    super();
+    this.displayObject = SpriteService.getSprite('token1.png');
   }
 
   protected _action(): void {
-    this.sprite.rotation += .1;
+    this.displayObject.rotation += .1;
   }
 
 }
