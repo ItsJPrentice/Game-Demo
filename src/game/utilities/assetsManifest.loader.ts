@@ -2,9 +2,9 @@ import * as PIXI from 'pixi.js';
 import { Observable, AjaxRequest, AjaxResponse } from 'rxjs';
 import * as _ from 'lodash';
 
-interface IAssetsManifest {
+interface ManifestEntry {
   id: string,
-  filename: string
+  path: string
 }
 
 export class AssetsManifestLoader {
@@ -19,9 +19,9 @@ export class AssetsManifestLoader {
         });
   }
 
-  private _addAssetsFromManifest(manifest: IAssetsManifest) {
-    _.each(manifest, filename => {
-      PIXI.loader.add(filename, require('../../game/_assets/sprites/' + filename));
+  private _addAssetsFromManifest(manifest: ManifestEntry[]) {
+    _.each(manifest, entry => {
+      PIXI.loader.add(entry, require('game/_assets/' + entry));
     });
   }
   

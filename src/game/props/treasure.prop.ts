@@ -5,7 +5,7 @@ export class Treasure extends Prop {
 
   constructor() {
     super();
-    this.displayObject = new PIXI.Sprite(PIXI.utils.TextureCache['token2.png']);
+    this.displayObject = new PIXI.Sprite(PIXI.utils.TextureCache['sprites/token2.png']);
   }
 
 }

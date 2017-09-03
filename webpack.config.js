@@ -43,7 +43,11 @@ module.exports = {
     ]
   },
   resolve: {
-    extensions: ['.ts', '.js']
+    extensions: ['.ts', '.js'],
+    modules: [
+      path.resolve('./node_modules'),
+      path.resolve('./src')
+    ]
   },
   output: {
     filename: 'bundle.js',
@@ -56,10 +60,12 @@ module.exports = {
   },
   plugins: [
     new HtmlWebpackPlugin(),
-    new GenerateJsonPlugin('sprite-assets-manifest.json', getSpriteAssetsManifest())
+    new GenerateJsonPlugin('sprite-assets-manifest.json', getAssetsManifest())
   ]
 }
 
-function getSpriteAssetsManifest() {
-  return fs.readdirSync(path.resolve(__dirname, 'src/game/_assets/sprites'));
+function getAssetsManifest() {
+  return fs.readdirSync(path
+                        .resolve(__dirname, 'src/game/_assets/sprites'))
+                        .map(filename => 'sprites/' + filename);
 }

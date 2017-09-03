@@ -1,5 +1,5 @@
 import * as PIXI from 'pixi.js';
-import { AssetsManifestLoader } from '../engine/utilities/assetsManifest.loader';
+import { AssetsManifestLoader } from './utilities/assetsManifest.loader';
 import { LoopService } from '../engine/services/loop.service';
 import { Stage } from '../engine/entities/stage.entity';
 import { DefaultStage } from './stages/default.stage';
