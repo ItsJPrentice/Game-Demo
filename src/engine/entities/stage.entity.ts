@@ -1,13 +1,13 @@
 import * as PIXI from 'pixi.js';
 import * as _ from 'lodash';
 import { BehaviorSubject } from 'rxjs';
-import { Entity } from '../entities/entity';
-import { Fixture } from '../entities/fixture.entity';
-import { Prop } from '../entities/prop.entity';
-import { Actor } from '../entities/actor.entity';
-import { Player } from '../players/player';
-import { LoopService } from '../services/loop.service';
-import { CollisionDetector } from '../collisions/collisionDetector';
+import { Entity } from './entity';
+import { Fixture } from './fixture.entity';
+import { Prop } from './prop.entity';
+import { Actor } from './actor.entity';
+import { Player } from 'engine/players/player';
+import { LoopService } from 'engine/services/loop.service';
+import { CollisionDetector } from 'engine/collisions/collisionDetector';
 
 export class Stage extends Entity {
   

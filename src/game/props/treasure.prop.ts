@@ -1,5 +1,5 @@
 import * as PIXI from 'pixi.js';
-import { Prop } from '../../engine/entities/prop.entity';
+import { Prop } from 'engine/entities/prop.entity';
 
 export class Treasure extends Prop {
 

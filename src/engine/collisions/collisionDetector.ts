@@ -1,7 +1,7 @@
 import * as PIXI from 'pixi.js';
 import * as _ from 'lodash';
 import { Observable, Subject } from 'rxjs';
-import { Entity } from '../entities/entity';
+import { Entity } from 'engine/entities/entity';
 import { Collision } from './collision';
 import { ContactCache } from './contact.cache';
 

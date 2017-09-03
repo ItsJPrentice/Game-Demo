@@ -1,4 +1,4 @@
-import { Entity } from '../entities/entity';
+import { Entity } from 'engine/entities/entity';
 
 export class Collision {
 

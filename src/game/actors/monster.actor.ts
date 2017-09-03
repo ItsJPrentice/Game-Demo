@@ -1,5 +1,5 @@
 import * as PIXI from 'pixi.js';
-import { Actor } from '../../engine/entities/actor.entity';
+import { Actor } from 'engine/entities/actor.entity';
 
 export class Monster extends Actor {
 

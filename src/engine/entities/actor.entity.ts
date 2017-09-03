@@ -1,6 +1,6 @@
-import { Entity } from '../entities/entity';
-import { LoopService } from '../services/loop.service';
-import { Player, IPlayerEvent } from '../players/player';
+import { Entity } from './entity';
+import { LoopService } from 'engine/services/loop.service';
+import { Player, IPlayerEvent } from 'engine/players/player';
 
 export interface IVelocity {
   x: number,

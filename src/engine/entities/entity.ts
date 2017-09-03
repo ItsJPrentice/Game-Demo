@@ -1,6 +1,6 @@
 import * as PIXI from 'pixi.js';
 import * as UUID from 'uuid';
-import { Collision} from '../collisions/collision';
+import { Collision} from 'engine/collisions/collision';
 
 export class Entity {
   

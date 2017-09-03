@@ -1,5 +1,5 @@
 import * as PIXI from 'pixi.js';
-import { Fixture } from '../../engine/entities/fixture.entity';
+import { Fixture } from 'engine/entities/fixture.entity';
 
 export class Background extends Fixture {
 

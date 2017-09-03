@@ -1,11 +1,11 @@
 import * as PIXI from 'pixi.js';
-import { Stage } from '../../engine/entities/stage.entity';
-import { KeyboardInput } from '../../engine/inputs/keyboard.input';
+import { Stage } from 'engine/entities/stage.entity';
+import { KeyboardInput } from 'engine/inputs/keyboard.input';
+import { Player } from 'engine/players/player';
 import { Background } from '../fixtures/background.fixture';
 import { Treasure } from '../props/treasure.prop';
 import { Hero } from '../actors/hero.actor';
 import { Monster } from '../actors/monster.actor';
-import { Player } from '../../engine/players/player';
 
 export class DefaultStage extends Stage {
 
