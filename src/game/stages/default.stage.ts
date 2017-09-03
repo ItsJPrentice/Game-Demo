@@ -1,11 +1,11 @@
 import * as PIXI from 'pixi.js';
-import { Stage } from './stage';
-import { KeyboardInput } from '../inputs/keyboard.input';
-import { SpriteService } from '../services/sprite.service';
-import { Prop } from '../props/prop';
+import { Stage } from '../../engine/entities/stage.entity';
+import { KeyboardInput } from '../../engine/inputs/keyboard.input';
+import { Background } from '../fixtures/background.fixture';
+import { Treasure } from '../props/treasure.prop';
 import { Hero } from '../actors/hero.actor';
 import { Monster } from '../actors/monster.actor';
-import { Player } from '../players/player';
+import { Player } from '../../engine/players/player';
 
 export class DefaultStage extends Stage {
 
@@ -16,13 +16,11 @@ export class DefaultStage extends Stage {
   }
 
   protected _setupMap(): void {
-    this.container.addChild(SpriteService.getSprite('background.png'));
+    this._addFixture(new Background(), new PIXI.Point(0, 0));
   }
 
   protected _setupProps(): void {
-    let prop = new Prop();
-    prop.displayObject = SpriteService.getSprite('token2.png');
-    this._addProp(prop, new PIXI.Point(100, 100));
+    this._addProp(new Treasure(), new PIXI.Point(100, 100));
   }
 
   protected _setupActors(): void {

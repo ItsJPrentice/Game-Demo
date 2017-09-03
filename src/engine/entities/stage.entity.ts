@@ -1,22 +1,27 @@
 import * as PIXI from 'pixi.js';
 import * as _ from 'lodash';
 import { BehaviorSubject } from 'rxjs';
-import { Prop } from '../props/prop';
-import { Actor } from '../actors/actor';
+import { Entity } from '../entities/entity';
+import { Fixture } from '../entities/fixture.entity';
+import { Prop } from '../entities/prop.entity';
+import { Actor } from '../entities/actor.entity';
 import { Player } from '../players/player';
 import { LoopService } from '../services/loop.service';
 import { CollisionDetector } from '../collisions/collisionDetector';
 
-export class Stage {
+export class Stage extends Entity {
+  
+  protected _displayObject: PIXI.Container;
 
-  protected _container = new PIXI.Container();
+  protected _fixtures = new BehaviorSubject(<Fixture[]>[]);
   protected _props = new BehaviorSubject(<Prop[]>[]);
   protected _actors = new BehaviorSubject(<Actor[]>[]);
   protected _players = new BehaviorSubject(<Player[]>[]);
   protected _collisionDetector: CollisionDetector;
 
   constructor(detectCollisions: boolean) {
-    this._container = new PIXI.Container();
+    super();
+    this.displayObject = new PIXI.Container();
     this._setupMap();
     this._setupProps();
     this._setupActors();
@@ -24,9 +29,13 @@ export class Stage {
     if (detectCollisions) this._setupCollisionDetection();
     LoopService.gameLoop.subscribe(() => this._update());
   }
+  
+  public get displayObject(): PIXI.Container {
+    return this._displayObject;
+  }
 
-  public get container(): PIXI.Container {
-    return this._container;
+  public set displayObject(displayObject: PIXI.Container) {
+    this._displayObject = displayObject;
   }
   
   protected _setupMap(): void { }
@@ -34,15 +43,21 @@ export class Stage {
   protected _setupActors(): void { }
   protected _setupPlayers(): void { }
   
+  protected _addFixture(fixture: Fixture, position?: PIXI.Point): void {
+    this._fixtures.next(_.concat(this._fixtures.value, fixture));
+    this.displayObject.addChild(fixture.displayObject);
+    if (position) fixture.displayObject.position = position;
+  }
+  
   protected _addProp(prop: Prop, position?: PIXI.Point): void {
     this._props.next(_.concat(this._props.value, prop));
-    this.container.addChild(prop.displayObject);
+    this.displayObject.addChild(prop.displayObject);
     if (position) prop.displayObject.position = position;
   }
   
   protected _addActor(actor: Actor, position?: PIXI.Point): void {
     this._actors.next(_.concat(this._actors.value, actor));
-    this.container.addChild(actor.displayObject);
+    this.displayObject.addChild(actor.displayObject);
     if (position) actor.displayObject.position = position;
   }
 

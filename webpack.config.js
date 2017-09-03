@@ -61,5 +61,5 @@ module.exports = {
 }
 
 function getSpriteAssetsManifest() {
-  return fs.readdirSync(path.resolve(__dirname, 'src/assets/sprites'));
+  return fs.readdirSync(path.resolve(__dirname, 'src/game/_assets/sprites'));
 }
