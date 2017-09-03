@@ -4,12 +4,7 @@ export class TilingFixture extends Fixture {
   
   protected _displayObject: PIXI.extras.TilingSprite;
 
-  constructor(
-    sprite: PIXI.extras.TilingSprite,
-    width: number,
-    height: number,
-    isSolid?: boolean
-  ) {
+  constructor(sprite: PIXI.extras.TilingSprite, width: number, height: number, isSolid?: boolean) {
     super(!!isSolid);
     this._displayObject = sprite;
     this._displayObject.width = width;
