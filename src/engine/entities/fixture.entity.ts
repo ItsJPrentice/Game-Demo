@@ -2,8 +2,11 @@ import { Entity } from './entity';
 
 export class Fixture extends Entity {
 
-  constructor() {
+  public isSolid: boolean;
+
+  constructor(isSolid?: boolean) {
     super();
+    this.isSolid = !!isSolid;
   }
 
 }

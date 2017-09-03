@@ -21,7 +21,7 @@ export class Stage extends Entity {
 
   constructor(detectCollisions: boolean) {
     super();
-    this.displayObject = new PIXI.Container();
+    this._displayObject = new PIXI.Container();
     this._setupMap();
     this._setupProps();
     this._setupActors();
@@ -32,10 +32,6 @@ export class Stage extends Entity {
   
   public get displayObject(): PIXI.Container {
     return this._displayObject;
-  }
-
-  public set displayObject(displayObject: PIXI.Container) {
-    this._displayObject = displayObject;
   }
   
   protected _setupMap(): void { }

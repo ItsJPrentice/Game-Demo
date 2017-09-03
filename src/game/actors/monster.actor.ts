@@ -5,7 +5,7 @@ export class Monster extends Actor {
 
   constructor() {
     super();
-    this.displayObject = new PIXI.Sprite(PIXI.utils.TextureCache['sprites/token3.png']);
+    this._displayObject = new PIXI.Sprite(PIXI.utils.TextureCache['sprites/token3.png']);
   }
 
 }

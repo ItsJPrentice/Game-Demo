@@ -15,10 +15,6 @@ export class Entity {
     return this._displayObject;
   }
 
-  public set displayObject(displayObject: PIXI.DisplayObject) {
-    this._displayObject = displayObject;
-  }
-
   public collide(collision: Collision): void {
     console.log(collision.type + ': ' + this.id + ' | ' + collision.entity.id);
   }

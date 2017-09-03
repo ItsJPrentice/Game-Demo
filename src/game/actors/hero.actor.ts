@@ -5,7 +5,7 @@ export class Hero extends Actor {
 
   constructor() {
     super();
-    this.displayObject = new PIXI.Sprite(PIXI.utils.TextureCache['sprites/token1.png']);
+    this._displayObject = new PIXI.Sprite(PIXI.utils.TextureCache['sprites/token1.png']);
   }
 
   protected _action(): void {
