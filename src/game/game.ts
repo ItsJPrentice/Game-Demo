@@ -3,8 +3,6 @@ import { AssetsManifestLoader } from './utilities/assetsManifest.loader';
 import { Stage } from '../engine/entities/stage.entity';
 import { DefaultStage } from './stages/default.stage';
 
-const AppStyles = require('./_assets/styles/styles.scss');
-
 export class Game {
 
   private _renderer: PIXI.WebGLRenderer | PIXI.CanvasRenderer;

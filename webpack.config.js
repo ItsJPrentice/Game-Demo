@@ -2,6 +2,7 @@ const path = require('path');
 const fs = require('fs');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const GenerateJsonPlugin = require('generate-json-webpack-plugin');
+const _ = require('lodash');
 
 module.exports = {
   context: path.resolve(__dirname, 'src'),
@@ -33,7 +34,7 @@ module.exports = {
           }, {
             loader: 'sass-loader',
             options: {
-              includePaths: ['src/asset/styles'],
+              includePaths: ['/styles'],
               sourceMap: true
             }
           }
@@ -65,7 +66,14 @@ module.exports = {
 }
 
 function getAssetsManifest() {
-  return fs.readdirSync(path
-                        .resolve(__dirname, 'src/game/_assets/sprites'))
-                        .map(filename => 'sprites/' + filename);
+  return walkFolder(path.resolve(__dirname, 'src/game/_assets'));
+}
+
+function walkFolder(dirPath) {
+  return _.flatten(_.map(fs.readdirSync(dirPath), fileName => {
+    let filePath = dirPath + '/' + fileName,
+        stat = fs.statSync(filePath);
+    if (stat && stat.isDirectory()) return walkFolder(filePath).map(file => fileName + '/' + file);
+    return fileName;
+  }));
 }

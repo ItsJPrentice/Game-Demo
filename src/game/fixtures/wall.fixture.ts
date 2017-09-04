@@ -1,7 +1,7 @@
 import * as PIXI from 'pixi.js';
-import { TilingFixture } from 'engine/entities/tilingFixture.entity';
+import { TiledFixture } from 'engine/entities/tiledFixture.entity';
 
-export class Wall extends TilingFixture {
+export class Wall extends TiledFixture {
 
   constructor(width: number, height: number) {
     super(

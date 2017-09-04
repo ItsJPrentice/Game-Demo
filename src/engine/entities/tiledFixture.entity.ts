@@ -1,6 +1,6 @@
 import { Fixture } from './fixture.entity';
 
-export class TilingFixture extends Fixture {
+export class TiledFixture extends Fixture {
   
   protected _displayObject: PIXI.extras.TilingSprite;
 
