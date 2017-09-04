@@ -6,7 +6,6 @@ import { Fixture } from './fixture.entity';
 import { Prop } from './prop.entity';
 import { Actor } from './actor.entity';
 import { Player } from 'engine/players/player';
-import { LoopService } from 'engine/services/loop.service';
 import { CollisionDetector } from 'engine/collisions/collisionDetector';
 
 export class Stage extends Entity {
@@ -23,18 +22,17 @@ export class Stage extends Entity {
     super();
     this._displayObject = new PIXI.Container();
     this._setupCollisionDetection();
-    this._setupMap();
+    this._setupFixtures();
     this._setupProps();
     this._setupActors();
     this._setupPlayers();
-    LoopService.gameLoop.subscribe(() => this._update());
   }
   
   public get displayObject(): PIXI.Container {
     return this._displayObject;
   }
   
-  protected _setupMap(): void { }
+  protected _setupFixtures(): void { }
   protected _setupProps(): void { }
   protected _setupActors(): void { }
   protected _setupPlayers(): void { }
@@ -68,7 +66,8 @@ export class Stage extends Entity {
     this._collisionDetector = new CollisionDetector();
   }
 
-  protected _update(): void {
+  public update(): void {
+    _.each(_.concat(this._fixtures, this._props, this._actors), entity => entity.update());
   }
 
 }

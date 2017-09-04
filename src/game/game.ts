@@ -1,6 +1,5 @@
 import * as PIXI from 'pixi.js';
 import { AssetsManifestLoader } from './utilities/assetsManifest.loader';
-import { LoopService } from '../engine/services/loop.service';
 import { Stage } from '../engine/entities/stage.entity';
 import { DefaultStage } from './stages/default.stage';
 
@@ -10,6 +9,7 @@ export class Game {
 
   private _renderer: PIXI.WebGLRenderer | PIXI.CanvasRenderer;
   private _stage: Stage;
+  private _ticker: PIXI.ticker.Ticker;
 
   constructor() {
     let loader = new AssetsManifestLoader();
@@ -19,7 +19,9 @@ export class Game {
   private _onAssetsLoaded(): void {
     this._setupRenderer();
     this._stage = new DefaultStage();
-    LoopService.gameLoop.subscribe(() => this._update());
+    this._ticker = new PIXI.ticker.Ticker();
+    this._ticker.add(this._update.bind(this));
+    this._ticker.start();
   }
 
   private _setupRenderer(): void {
@@ -33,6 +35,7 @@ export class Game {
   }
 
   private _update(): void {
+    this._stage.update();
     this._renderer.render(this._stage.displayObject);
   }
 

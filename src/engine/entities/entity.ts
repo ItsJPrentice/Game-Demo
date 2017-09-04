@@ -28,6 +28,9 @@ export class Entity {
     this._onCollision(collision);
   }
 
-  protected _onCollision(collision: Collision): void  { }
+  protected _onCollision(collision: Collision): void { }
+
+  public update(): void {
+  }
 
 }

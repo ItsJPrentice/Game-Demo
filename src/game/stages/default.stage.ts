@@ -16,7 +16,7 @@ export class DefaultStage extends Stage {
     super();
   }
 
-  protected _setupMap(): void {
+  protected _setupFixtures(): void {
     this._addFixture(new Floor(256, 256), new PIXI.Point(0, 0));
     this._addFixture(new Wall(240, 16), new PIXI.Point(0, 0));
     this._addFixture(new Wall(16, 240), new PIXI.Point(240, 0));

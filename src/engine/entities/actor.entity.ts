@@ -1,5 +1,4 @@
 import { Entity } from './entity';
-import { LoopService } from 'engine/services/loop.service';
 import { Player, IPlayerEvent } from 'engine/players/player';
 import { Collision } from 'engine/collisions/collision';
 import { CollisionDetector } from 'engine/collisions/collisionDetector';
@@ -17,14 +16,13 @@ export class Actor extends Entity {
   constructor() {
     super();
     this._velocity = { x: 0, y: 0 };
-    LoopService.gameLoop.subscribe(() => this._update());
   }
 
   public setPlayer(player: Player): void {
     player.stream.subscribe(event => this._onPlayerEvent(event));
   }
   
-  protected _update(): void {
+  public update(): void {
     this._updatePosition(this._collisionDetector
                              .getMaxVelocity(this.displayObject.getBounds(), this._velocity));
     if (this._isDoingAction) this._action();
