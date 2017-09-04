@@ -1,11 +1,13 @@
 import * as PIXI from 'pixi.js';
 import * as UUID from 'uuid';
-import { Collision} from 'engine/collisions/collision';
+import { CollisionDetector } from 'engine/collisions/collisionDetector';
+import { Collision } from 'engine/collisions/collision';
 
 export class Entity {
   
   readonly id: string;
   protected _displayObject: PIXI.DisplayObject;
+  protected _collisionDetector: CollisionDetector;
   public isSolid: boolean;
 
   constructor(isSolid?: boolean) {
@@ -15,6 +17,11 @@ export class Entity {
 
   public get displayObject(): PIXI.DisplayObject {
     return this._displayObject;
+  }
+
+  public set collisionDetector(collisionDetector: CollisionDetector) {
+    this._collisionDetector = collisionDetector;
+    this._collisionDetector.addStaticEntity(this);
   }
 
   public collide(collision: Collision): void {

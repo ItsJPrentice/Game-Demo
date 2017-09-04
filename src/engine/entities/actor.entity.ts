@@ -2,6 +2,7 @@ import { Entity } from './entity';
 import { LoopService } from 'engine/services/loop.service';
 import { Player, IPlayerEvent } from 'engine/players/player';
 import { Collision } from 'engine/collisions/collision';
+import { CollisionDetector } from 'engine/collisions/collisionDetector';
 
 export interface IVelocity {
   x: number,
@@ -24,16 +25,23 @@ export class Actor extends Entity {
   }
   
   protected _update(): void {
-    this._updatePosition();
+    this._updatePosition(this._collisionDetector
+                             .getMaxVelocity(this.displayObject.getBounds(), this._velocity));
     if (this._isDoingAction) this._action();
   }
 
-  protected _updatePosition(): void {
-    this.displayObject.position.x += this._velocity.x;
-    this.displayObject.position.y += this._velocity.y;
+  protected _updatePosition(velocity: IVelocity): void {
+    this.displayObject.position.x += velocity.x;
+    this.displayObject.position.y += velocity.y;
+  }
+  
+  public set collisionDetector(collisionDetector: CollisionDetector) {
+    this._collisionDetector = collisionDetector;
+    this._collisionDetector.addControlledEntity(this);
   }
 
   protected _action(): void {
+    console.log('PUSH BUTAN');
   }
 
   protected _onPlayerEvent(event: IPlayerEvent): void {
@@ -45,14 +53,6 @@ export class Actor extends Entity {
       case 'action':    this._isDoingAction = event.type === 'start'; break;
       default: break;
     }
-  }
-
-  protected _onCollision(collision: Collision): void {
-    if (collision.entity.isSolid) this._onSolidCollision(collision);
-  }
-
-  protected _onSolidCollision(collision: Collision): void {
-    //this.displayObject.position = this._lastPosition;
   }
 
 }
