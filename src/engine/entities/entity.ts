@@ -6,9 +6,11 @@ export class Entity {
   
   readonly id: string;
   protected _displayObject: PIXI.DisplayObject;
+  public isSolid: boolean;
 
-  constructor() {
+  constructor(isSolid?: boolean) {
     this.id = UUID.v4();
+    this.isSolid = !!isSolid;
   }
 
   public get displayObject(): PIXI.DisplayObject {
@@ -16,7 +18,9 @@ export class Entity {
   }
 
   public collide(collision: Collision): void {
-    console.log(collision.type + ': ' + this.id + ' | ' + collision.entity.id);
+    this._onCollision(collision);
   }
+
+  protected _onCollision(collision: Collision): void  { }
 
 }

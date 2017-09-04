@@ -13,20 +13,20 @@ export class Stage extends Entity {
   
   protected _displayObject: PIXI.Container;
 
+  protected _collisionDetector: CollisionDetector;
   protected _fixtures = new BehaviorSubject(<Fixture[]>[]);
   protected _props = new BehaviorSubject(<Prop[]>[]);
   protected _actors = new BehaviorSubject(<Actor[]>[]);
   protected _players = new BehaviorSubject(<Player[]>[]);
-  protected _collisionDetector: CollisionDetector;
 
-  constructor(detectCollisions: boolean) {
+  constructor() {
     super();
     this._displayObject = new PIXI.Container();
+    this._setupCollisionDetection();
     this._setupMap();
     this._setupProps();
     this._setupActors();
     this._setupPlayers();
-    if (detectCollisions) this._setupCollisionDetection();
     LoopService.gameLoop.subscribe(() => this._update());
   }
   
@@ -62,12 +62,13 @@ export class Stage extends Entity {
   }
 
   protected _setupCollisionDetection(): void {
-    this._collisionDetector = new CollisionDetector(this._props.asObservable(),
-                                                    this._actors.asObservable());
+    this._collisionDetector = new CollisionDetector(
+      this._actors.asObservable(),
+      this._props.asObservable(),
+      this._fixtures.asObservable()
+    );
   }
-  
-  protected _update(): void {
-    if (this._collisionDetector) this._collisionDetector.checkCollisions();
-  }
+
+  protected _update(): void { }
 
 }

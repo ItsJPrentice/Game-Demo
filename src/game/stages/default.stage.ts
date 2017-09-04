@@ -13,7 +13,7 @@ export class DefaultStage extends Stage {
   private _hero: Hero;
 
   constructor() {
-    super(true);
+    super();
   }
 
   protected _setupMap(): void {

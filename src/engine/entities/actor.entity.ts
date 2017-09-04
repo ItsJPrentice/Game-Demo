@@ -1,6 +1,7 @@
 import { Entity } from './entity';
 import { LoopService } from 'engine/services/loop.service';
 import { Player, IPlayerEvent } from 'engine/players/player';
+import { Collision } from 'engine/collisions/collision';
 
 export interface IVelocity {
   x: number,
@@ -25,7 +26,6 @@ export class Actor extends Entity {
   protected _update(): void {
     this._updatePosition();
     if (this._isDoingAction) this._action();
-
   }
 
   protected _updatePosition(): void {
@@ -45,6 +45,14 @@ export class Actor extends Entity {
       case 'action':    this._isDoingAction = event.type === 'start'; break;
       default: break;
     }
+  }
+
+  protected _onCollision(collision: Collision): void {
+    if (collision.entity.isSolid) this._onSolidCollision(collision);
+  }
+
+  protected _onSolidCollision(collision: Collision): void {
+    //this.displayObject.position = this._lastPosition;
   }
 
 }

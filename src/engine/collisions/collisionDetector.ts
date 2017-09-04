@@ -2,31 +2,39 @@ import * as PIXI from 'pixi.js';
 import * as _ from 'lodash';
 import { Observable, Subject } from 'rxjs';
 import { Entity } from 'engine/entities/entity';
+import { Fixture } from 'engine/entities/fixture.entity';
+import { Prop } from 'engine/entities/prop.entity';
+import { Actor } from 'engine/entities/actor.entity';
 import { Collision } from './collision';
 import { ContactCache } from './contact.cache';
 
 export class CollisionDetector {
 
-  private _collisions = new Subject<Collision>();
-  private _staticEntities = <Entity[]>[];
-  private _dynamicEntities = <Entity[]>[];
+  private _actors: Observable<Actor[]>;
+  private _props: Observable<Prop[]>;
+  private _fixtures: Observable<Fixture[]>;
   private _contactCache = new ContactCache();
 
-  constructor(staticEntities: Observable<Entity[]>, dynamicEntities: Observable<Entity[]>) {
-    staticEntities.subscribe(entities => this._staticEntities = entities);
-    dynamicEntities.subscribe(entities => this._dynamicEntities = entities);
+  constructor(actors: Observable<Actor[]>, props?: Observable<Prop[]>, fixtures?: Observable<Fixture[]>) {
+    this._actors = actors;
+    this._props = props;
+    this._fixtures = fixtures;
   }
 
+  /*
   public checkCollisions(): void {
-    _.each(this._dynamicEntities, this._checkDynamicEntity.bind(this));
+    _.each(this._actors, this._checkActor.bind(this));
   }
-
-  private _checkDynamicEntity(dynamicEntity: Entity, index: number): void {
-    _.each(this._staticEntities,
-           staticEntity => this._checkEntityCollision(dynamicEntity, staticEntity));
-    _.each(_.slice(this._dynamicEntities, index + 1),
-           dynamicEntity2 => this._checkEntityCollision(dynamicEntity, dynamicEntity2));
+  
+  private _checkActor(actor: Actor, index: number): void {
+    _.each(_.slice(this._actors, index + 1),
+           actor2 => this._checkEntityCollision(actor, actor2));
+    _.each(this._props,
+           prop => this._checkEntityCollision(actor, prop));
+    _(this._fixtures).filter(fixture => fixture.isSolid).each(
+           fixture => this._checkEntityCollision(actor, fixture));
   }
+  */
 
   private _checkEntityCollision(entity1: Entity, entity2: Entity): void {
     if (this._testIntersection(entity1.displayObject.getBounds(), entity2.displayObject.getBounds())) {
