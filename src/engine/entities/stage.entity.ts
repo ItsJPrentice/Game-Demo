@@ -68,6 +68,7 @@ export class Stage extends Entity {
 
   public update(): void {
     _.each(_.concat(this._fixtures, this._props, this._actors), entity => entity.update());
+    this._collisionDetector.checkCollisions();
   }
 
 }

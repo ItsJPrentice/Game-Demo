@@ -1,6 +1,5 @@
 import * as PIXI from 'pixi.js';
 import * as _ from 'lodash';
-import { Observable, Subject } from 'rxjs';
 import { Entity } from 'engine/entities/entity';
 import { IVelocity } from 'engine/entities/actor.entity';
 import { Collision } from './collision';
@@ -8,38 +7,42 @@ import { ContactCache } from './contact.cache';
 
 export class CollisionDetector {
 
-  private _static = <Entity[]>[];
-  private _dynamic = <Entity[]>[];
-  private _controlled = <Entity[]>[];
+  private _staticEntities = <Entity[]>[];
+  private _dynamicEntities = <Entity[]>[];
+  private _controlledEntities = <Entity[]>[];
   private _contactCache = new ContactCache();
 
   constructor() { }
-
-  /*
+  
   public checkCollisions(): void {
-    _.each(this._actors, this._checkActor.bind(this));
+    _.each(this._controlledEntities, this._checkControlledEntities.bind(this));
+    _.each(this._dynamicEntities, this._checkDynamicEntities.bind(this));
   }
   
-  private _checkActor(actor: Actor, index: number): void {
-    _.each(_.slice(this._actors, index + 1),
-           actor2 => this._checkEntityCollision(actor, actor2));
-    _.each(this._props,
-           prop => this._checkEntityCollision(actor, prop));
-    _(this._fixtures).filter(fixture => fixture.isSolid).each(
-           fixture => this._checkEntityCollision(actor, fixture));
+  private _checkControlledEntities(entity: Entity, index: number): void {
+    _.each(_.slice(this._controlledEntities, index + 1),
+           controlledEntity => this._checkEntityCollision(entity, controlledEntity));
+    _.each(this._dynamicEntities,
+           dynamicEntity => this._checkEntityCollision(entity, dynamicEntity));
+    _.each(this._staticEntities,
+           staticEntity => this._checkEntityCollision(entity, staticEntity));
   }
-  */
+  
+  private _checkDynamicEntities(entity: Entity, index: number): void {
+    _.each(_.slice(this._dynamicEntities, index + 1),
+           dynamicEntity => this._checkEntityCollision(entity, dynamicEntity));
+  }
 
   public addStaticEntity(entity: Entity): void {
-    this._static.push(entity);
+    this._staticEntities.push(entity);
   }
   
   public addDynamicEntity(entity: Entity): void {
-    this._dynamic.push(entity);
+    this._dynamicEntities.push(entity);
   }
   
   public addControlledEntity(entity: Entity): void {
-    this._controlled.push(entity);
+    this._controlledEntities.push(entity);
   }
 
   private _checkEntityCollision(entity1: Entity, entity2: Entity): void {
@@ -79,7 +82,7 @@ export class CollisionDetector {
   }
 
   private _getSolids(): PIXI.Rectangle[] {
-    let solids =  _.concat(this._controlled, this._dynamic, this._static)
+    let solids =  _.concat(this._controlledEntities, this._dynamicEntities, this._staticEntities)
                    .filter(entity => entity.isSolid)
                    .map(entity => entity.displayObject.getBounds());
     return solids;
@@ -100,7 +103,6 @@ export class CollisionDetector {
     testHitbox[axis] += v;
     _.each(solids, solid => {
       if (this._testIntersection(testHitbox, solid)) {
-        console.log(testHitbox, solid);
         isDesc ? v-- : v++;
         hasIntersection = true;
         return false;
