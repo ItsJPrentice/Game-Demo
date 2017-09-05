@@ -1,7 +1,6 @@
 import * as PIXI from 'pixi.js';
 import * as _ from 'lodash';
 import { Entity } from 'engine/entities/entity';
-import { IVelocity } from 'engine/entities/actor.entity';
 import { Collision } from './collision';
 import { ContactCache } from './contact.cache';
 
@@ -88,11 +87,11 @@ export class CollisionDetector {
     return solids;
   }
 
-  public getMaxVelocity(hitbox: PIXI.Rectangle, velocity: IVelocity): IVelocity {
-    let maxVelocity: IVelocity = { x: 0, y: 0 },
+  public getMaxVelocity(hitbox: PIXI.Rectangle, velocity: PIXI.Point): PIXI.Point {
+    let maxVelocity = velocity.clone(),
         solids = this._getSolids();
-    maxVelocity.x = velocity.x !== 0 ? this._getMaxAxisVelocity(hitbox, 'x', velocity.x, solids) : 0;
-    maxVelocity.y = velocity.y !== 0 ? this._getMaxAxisVelocity(hitbox, 'y', velocity.y, solids) : 0;
+    if (maxVelocity.x !== 0) maxVelocity.x = this._getMaxAxisVelocity(hitbox, 'x', velocity.x, solids);
+    if (maxVelocity.y !== 0) maxVelocity.y = this._getMaxAxisVelocity(hitbox, 'y', velocity.y, solids);
     return maxVelocity;
   }
 

@@ -23,6 +23,7 @@ export class DefaultStage extends Stage {
     this._addFixture(new Wall(16, 240), new PIXI.Point(240, 0));
     this._addFixture(new Wall(240, 16), new PIXI.Point(16, 240));
     this._addFixture(new Wall(16, 256), new PIXI.Point(0, 16));
+    this._addFixture(new Wall(16*3, 16), new PIXI.Point(16*3, 256 - 16*3));
     this._addFixture(new Explosion(), new PIXI.Point(16, 16));
   }
 

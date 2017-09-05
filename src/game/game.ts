@@ -32,8 +32,8 @@ export class Game {
     document.body.appendChild(this._renderer.view);
   }
 
-  private _update(): void {
-    this._stage.update();
+  private _update(deltaTime: number): void {
+    this._stage.update(deltaTime);
     this._renderer.render(this._stage.displayObject);
   }
 

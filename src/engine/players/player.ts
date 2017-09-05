@@ -1,7 +1,7 @@
 import { Observable, BehaviorSubject, Subscription } from 'rxjs';
 
 export interface IPlayerEvent {
-  type: string;
+  type: 'start' | 'stop';
   name: string;
 }
 
@@ -13,9 +13,9 @@ export class Player {
   constructor() {
     this._input = new BehaviorSubject<Observable<KeyboardEvent>>(Observable.empty<KeyboardEvent>());
     this._stream = this._input
-                             .asObservable()
-                             .switchMap(event => event)
-                             .map(this._mapKeyboardEventToPlayerEvent);
+                       .asObservable()
+                       .switchMap(event => event)
+                       .map(this._mapKeyboardEventToPlayerEvent);
   }
 
   public set input(input: Observable<KeyboardEvent>) {
@@ -28,7 +28,7 @@ export class Player {
 
   private _mapKeyboardEventToPlayerEvent(keyboardEvent: KeyboardEvent): IPlayerEvent {
     let playerEvent: IPlayerEvent = {
-      type:  keyboardEvent.type === 'keydown' ? 'start' : 'stop',
+      type: keyboardEvent.type === 'keydown' ? 'start' : 'stop',
       name: null
     };
     switch (keyboardEvent.code) {
@@ -36,7 +36,8 @@ export class Player {
       case 'ArrowRight': playerEvent.name = 'moveRight'; break;
       case 'ArrowDown':  playerEvent.name = 'moveDown'; break;
       case 'ArrowLeft':  playerEvent.name = 'moveLeft'; break;
-      case 'Space':      playerEvent.name = 'action'; break;
+      case 'Space':      playerEvent.name = 'action1'; break;
+      case 'ShiftLeft':  playerEvent.name = 'action2'; break;
       default: break;
     }
     return playerEvent;

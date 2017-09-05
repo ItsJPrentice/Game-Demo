@@ -30,7 +30,7 @@ export class Entity {
 
   protected _onCollision(collision: Collision): void { }
 
-  public update(): void {
+  public update(deltaTime: number): void {
   }
 
 }
