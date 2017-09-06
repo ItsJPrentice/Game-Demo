@@ -1,7 +1,9 @@
 import * as PIXI from 'pixi.js';
-import { AssetsManifestLoader } from './utilities/assetsManifest.loader';
-import { Stage } from '../engine/entities/stage.entity';
-import { DefaultStage } from './stages/default.stage';
+import { AssetsManifestLoader } from 'game/utilities/assetsManifest.loader';
+import { LoopService } from 'engine/services/loop.service';
+import { Stage } from 'engine/entities/stage.entity';
+import { DefaultStage } from 'game/stages/default.stage';
+import { GamepadsInput } from 'engine/inputs/gamepads.input';
 
 export class Game {
 
@@ -10,6 +12,7 @@ export class Game {
   private _ticker: PIXI.ticker.Ticker;
 
   constructor() {
+    new GamepadsInput();
     let loader = new AssetsManifestLoader();
     loader.loadAssetsFromManifest('/sprite-assets-manifest.json', this._onAssetsLoaded.bind(this));
   }
@@ -17,9 +20,7 @@ export class Game {
   private _onAssetsLoaded(): void {
     this._setupRenderer();
     this._stage = new DefaultStage();
-    this._ticker = new PIXI.ticker.Ticker();
-    this._ticker.add(this._update.bind(this));
-    this._ticker.start();
+    LoopService.loop.subscribe(delta => this._update(delta));
   }
 
   private _setupRenderer(): void {

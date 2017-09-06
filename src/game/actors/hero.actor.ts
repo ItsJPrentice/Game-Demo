@@ -7,7 +7,7 @@ export class Hero extends Actor {
 
   protected _activeJump: JumpAction;
   protected _jumpVelocity = -25;
-  protected _inputVelocityX = 2;
+  protected _inputVelocityX = 3;
 
   constructor() {
     super(true);
@@ -35,7 +35,9 @@ export class Hero extends Actor {
     if (!this._activeJump) this._activeJump = new JumpAction(this._jumpVelocity);
   }
   
-  protected _onMoveUp(state: 'start' | 'stop'): void { }  
+  protected _onMoveUp(state: 'start' | 'stop'): void {
+    this._isDoingAction1 = state === 'start';
+  }  
   protected _onMoveDown(state: 'start' | 'stop'): void { }
 
 }

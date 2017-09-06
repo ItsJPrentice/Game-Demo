@@ -63,8 +63,8 @@ export class Actor extends Entity {
       case 'moveRight': this._onMoveRight(event.type); break;
       case 'moveDown':  this._onMoveDown(event.type); break;
       case 'moveLeft':  this._onMoveLeft(event.type); break;
-      case 'action1':   this._isDoingAction1 = event.type === 'start'; break;
-      case 'action2':   this._isDoingAction2 = event.type === 'start'; break;
+      case 'action1':   this._onAction1(event.type); break;
+      case 'action2':   this._onAction2(event.type); break;
       default: break;
     }
   }
@@ -95,6 +95,14 @@ export class Actor extends Entity {
       this._inputVelocity.x - (state === 'start' ? this._inputVelocityX : -1 * this._inputVelocityX),
       this._inputVelocity.y
     );
+  }
+  
+  protected _onAction1(state: 'start' | 'stop'): void {
+    this._isDoingAction1 = state === 'start';
+  }
+  
+  protected _onAction2(state: 'start' | 'stop'): void {
+    this._isDoingAction2 = state === 'start';
   }
 
 }
