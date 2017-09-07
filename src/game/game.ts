@@ -3,7 +3,8 @@ import { AssetsManifestLoader } from 'game/utilities/assetsManifest.loader';
 import { LoopService } from 'engine/services/loop.service';
 import { Stage } from 'engine/entities/stage.entity';
 import { DefaultStage } from 'game/stages/default.stage';
-import { GamepadsInput } from 'engine/inputs/gamepads.input';
+import { GamepadInputs } from 'engine/inputs/gamepad.inputs';
+import { KeyboardInputs } from 'engine/inputs/keyboard.inputs';
 
 export class Game {
 
@@ -12,7 +13,8 @@ export class Game {
   private _ticker: PIXI.ticker.Ticker;
 
   constructor() {
-    new GamepadsInput();
+    new GamepadInputs();
+    new KeyboardInputs();
     let loader = new AssetsManifestLoader();
     loader.loadAssetsFromManifest('/sprite-assets-manifest.json', this._onAssetsLoaded.bind(this));
   }

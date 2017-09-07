@@ -1,19 +1,19 @@
 import * as PIXI from 'pixi.js';
 import { Actor } from 'engine/entities/actor.entity';
-import { IPlayerEvent } from 'engine/players/player';
+import { GameInput } from 'engine/inputs/game.inputs';
 import { JumpAction } from 'game/actions/jump.action';
 
 export class Hero extends Actor {
 
   protected _activeJump: JumpAction;
   protected _jumpVelocity = -25;
-  protected _inputVelocityX = 3;
+  protected _maxVelocityX = 3;
 
   constructor() {
     super(true);
     this._displayObject = new PIXI.Sprite(PIXI.utils.TextureCache['sprites/token1.png']);
   }
-  
+  /*
   protected _updatePosition(deltaTime: number): void {
     let velocity = new PIXI.Point(
       this._inputVelocity.x,
@@ -31,13 +31,12 @@ export class Hero extends Actor {
     if (maxVelocity.y === 0) this._activeJump = null;
   }
 
-  protected _action1(): void {
-    if (!this._activeJump) this._activeJump = new JumpAction(this._jumpVelocity);
+  protected _tryAction1(isToggled: boolean): void {
+    if (isToggled && !this._activeJump) this._activeJump = new JumpAction(this._jumpVelocity);
   }
   
-  protected _onMoveUp(state: 'start' | 'stop'): void {
-    this._isDoingAction1 = state === 'start';
-  }  
-  protected _onMoveDown(state: 'start' | 'stop'): void { }
+  protected _tryMoveUp(isToggled: boolean): void { }  
+  protected _tryMoveDown(isToggled: boolean): void { }  
 
+  */
 }

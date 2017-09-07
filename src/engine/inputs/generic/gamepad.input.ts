@@ -3,6 +3,7 @@ import * as _ from 'lodash';
 import { LoopService } from 'engine/services/loop.service';
 
 export interface IGamepadState {
+  axes: number[];
   buttons: GamepadButton[];
 }
 
@@ -10,7 +11,7 @@ export class GamepadInput {
   
   private _stream: Observable<IGamepadState>;
   private _gamepad: Gamepad;
-  private _frameStream = Observable.interval(0, Scheduler.animationFrame);
+  private _frameStream = LoopService.loop;
 
   constructor(gamepad: Gamepad) {
     this._gamepad = gamepad;
@@ -23,6 +24,7 @@ export class GamepadInput {
 
   private _getGamepadState(): IGamepadState {
     return {
+      axes: navigator.getGamepads()[this._gamepad.index].axes,
       buttons: navigator.getGamepads()[this._gamepad.index].buttons
     }
   }

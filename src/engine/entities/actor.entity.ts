@@ -1,26 +1,29 @@
 import { Entity } from './entity';
-import { Player, IPlayerEvent } from 'engine/players/player';
+import { GameInput } from 'engine/inputs/game.inputs';
+import { Player } from 'engine/players/player';
 import { Collision } from 'engine/collisions/collision';
 import { CollisionDetector } from 'engine/collisions/collisionDetector';
 import { CONSTANTS } from 'game/constants';
 
 export class Actor extends Entity {
   
-  protected _inputVelocityX = 1;
-  protected _inputVelocityY = 1;
-  protected _inputVelocity: PIXI.Point;
+  protected _inputAccelerationX = 1;
+  protected _inputAccelerationY = 1;
+  protected _inputAcceleration = new PIXI.Point(0,0);
+  protected _maxVelocityX = 1;
+  protected _maxVelocityY = 1;
+  protected _velocity = new PIXI.Point(0,0);
   protected _gravityVelocity = 0;
   protected _isDoingAction1: boolean;
   protected _isDoingAction2: boolean;
 
   constructor(useGravity?: boolean) {
     super();
-    this._inputVelocity = new PIXI.Point(0, 0);
     if (useGravity) this._gravityVelocity = CONSTANTS.GRAVITY;
   }
 
   public setPlayer(player: Player): void {
-    player.stream.subscribe(event => this._onPlayerEvent(event));
+    player.stream.subscribe(event => this._onPlayerInput(event));
   }
   
   public update(deltaTime: number): void {
@@ -31,17 +34,25 @@ export class Actor extends Entity {
 
   protected _updatePosition(deltaTime: number): void {
     let velocity = new PIXI.Point(
-      this._inputVelocity.x,
-      this._inputVelocity.y + this._gravityVelocity
+      this._velocity.x,
+      this._velocity.y + this._gravityVelocity
     );
     this._setPosition(velocity);
   }
 
   protected _setPosition(velocity: PIXI.Point): void {
-    let maxVelocity = this._collisionDetector
-                          .getMaxVelocity(this.displayObject.getBounds(), velocity);
+    let maxVelocity = this._clampVelocity(velocity);
     this.displayObject.position.x += maxVelocity.x;
     this.displayObject.position.y += maxVelocity.y;
+  }
+
+  protected _clampVelocity(velocity: PIXI.Point): PIXI.Point {
+    if (velocity.x > 0 && velocity.x > this._maxVelocityX) velocity.set(this._maxVelocityX, velocity.y);
+    if (velocity.x < 0 && velocity.x < this._maxVelocityX * -1) velocity.set(this._maxVelocityX * -1, velocity.y);
+    if (velocity.y > 0 && velocity.y > this._maxVelocityY) velocity.set(velocity.x, this._maxVelocityY);
+    if (velocity.y < 0 && velocity.y < this._maxVelocityY * -1) velocity.set(velocity.x, this._maxVelocityY * -1);
+    return this._collisionDetector
+    .getMaxVelocity(this.displayObject.getBounds(), velocity)
   }
   
   public set collisionDetector(collisionDetector: CollisionDetector) {
@@ -57,52 +68,35 @@ export class Actor extends Entity {
     console.log('Action 2');
   }
 
-  protected _onPlayerEvent(event: IPlayerEvent): void {
-    switch (event.name) {
-      case 'moveUp':    this._onMoveUp(event.type); break;
-      case 'moveRight': this._onMoveRight(event.type); break;
-      case 'moveDown':  this._onMoveDown(event.type); break;
-      case 'moveLeft':  this._onMoveLeft(event.type); break;
-      case 'action1':   this._onAction1(event.type); break;
-      case 'action2':   this._onAction2(event.type); break;
-      default: break;
-    }
+  protected _onPlayerInput(input: GameInput): void {
+    this._moveX(input.movements.x);
+    this._moveY(input.movements.y);
+    this._tryAction1(input.actions.action1);
+    this._tryAction2(input.actions.action1);
   }
   
-  protected _onMoveUp(state: 'start' | 'stop'): void {
-    this._inputVelocity.set(
-      this._inputVelocity.x,
-      this._inputVelocity.y - (state === 'start' ? this._inputVelocityY : -1 * this._inputVelocityY)
-    );
+  protected _moveX(movement: number): void {
+    this._velocity.set(this._velocity.x, this._velocity.y + this._inputAccelerationY * movement);
   }
   
-  protected _onMoveRight(state: 'start' | 'stop'): void {
-    this._inputVelocity.set(
-      this._inputVelocity.x + (state === 'start' ? this._inputVelocityX : -1 * this._inputVelocityX),
-      this._inputVelocity.y
-    );
+  protected _moveY(movement: number): void {
+    this._velocity.set(this._velocity.x + this._inputAccelerationX * movement, this._velocity.y);
   }
   
-  protected _onMoveDown(state: 'start' | 'stop'): void {
-    this._inputVelocity.set(
-      this._inputVelocity.x,
-      this._inputVelocity.y + (state === 'start' ? this._inputVelocityY : -1 * this._inputVelocityY)
-    );
+  protected _tryMoveDown(isToggled: boolean): void {
+    if (isToggled) this._velocity.set(this._velocity.x, this._velocity.y + this._inputAccelerationY);
   }
   
-  protected _onMoveLeft(state: 'start' | 'stop'): void {
-    this._inputVelocity.set(
-      this._inputVelocity.x - (state === 'start' ? this._inputVelocityX : -1 * this._inputVelocityX),
-      this._inputVelocity.y
-    );
+  protected _tryMoveLeft(isToggled: boolean): void {
+    if (isToggled) this._velocity.set(this._velocity.x - this._inputAccelerationX, this._velocity.y);
   }
   
-  protected _onAction1(state: 'start' | 'stop'): void {
-    this._isDoingAction1 = state === 'start';
+  protected _tryAction1(isToggled: boolean): void {
+    this._isDoingAction1 = isToggled;
   }
   
-  protected _onAction2(state: 'start' | 'stop'): void {
-    this._isDoingAction2 = state === 'start';
+  protected _tryAction2(isToggled: boolean): void {
+    this._isDoingAction2 = isToggled;
   }
 
 }

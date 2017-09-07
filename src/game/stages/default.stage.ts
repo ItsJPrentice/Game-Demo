@@ -1,6 +1,5 @@
 import * as PIXI from 'pixi.js';
 import { Stage } from 'engine/entities/stage.entity';
-import { KeyboardInput } from 'engine/inputs/keyboard.input';
 import { Player } from 'engine/players/player';
 import { Floor } from '../fixtures/floor.fixture';
 import { Wall } from '../fixtures/wall.fixture';
@@ -8,6 +7,8 @@ import { Explosion } from '../fixtures/explosion.fixture';
 import { Treasure } from '../props/treasure.prop';
 import { Hero } from '../actors/hero.actor';
 import { Monster } from '../actors/monster.actor';
+import { KeyboardInputs } from 'engine/inputs/keyboard.inputs';
+import { GamepadInputs } from 'engine/inputs/gamepad.inputs';
 
 export class DefaultStage extends Stage {
 
@@ -39,7 +40,7 @@ export class DefaultStage extends Stage {
   
   protected _setupPlayers(): void {
     let player1 = new Player();
-    player1.input = new KeyboardInput().stream;
+    player1.input = new GamepadInputs().streams[0];
     this._hero.setPlayer(player1);
     this._addPlayer(player1);
   }
