@@ -60,7 +60,7 @@ module.exports = {
     contentBase: path.join(__dirname, 'dist')
   },
   plugins: [
-    new HtmlWebpackPlugin(),
+    new HtmlWebpackPlugin({ title: 'Game Demo' }),
     new GenerateJsonPlugin('sprite-assets-manifest.json', getAssetsManifest())
   ]
 }
