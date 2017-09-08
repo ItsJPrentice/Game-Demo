@@ -7,7 +7,7 @@ export class GamepadInputs extends GameInputs {
 
   private _gamepadInputs: GamepadInput[] = [];
   
-  private _inputs: BehaviorSubject<Observable<GameInput>>[] = [
+  private _inputs = [
     new BehaviorSubject<Observable<GameInput>>(Observable.empty<GameInput>()),
     new BehaviorSubject<Observable<GameInput>>(Observable.empty<GameInput>()),
     new BehaviorSubject<Observable<GameInput>>(Observable.empty<GameInput>()),

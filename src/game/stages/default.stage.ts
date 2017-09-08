@@ -12,8 +12,6 @@ import { GamepadInputs } from 'engine/inputs/gamepad.inputs';
 
 export class DefaultStage extends Stage {
 
-  private _hero: Hero;
-
   constructor() {
     super();
   }
@@ -33,15 +31,15 @@ export class DefaultStage extends Stage {
   }
 
   protected _setupActors(): void {
-    this._hero = new Hero();
-    this._addActor(this._hero, new PIXI.Point(128, 128));
+    let hero = new Hero();
+    this._addActor(hero, new PIXI.Point(128, 128));
     this._addActor(new Monster(), new PIXI.Point(150, 150));
   }
   
   protected _setupPlayers(): void {
     let player1 = new Player();
     player1.input = new GamepadInputs().streams[0];
-    this._hero.setPlayer(player1);
+    this._actors[0].input = player1.stream;
     this._addPlayer(player1);
   }
 

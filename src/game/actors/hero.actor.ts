@@ -1,19 +1,19 @@
 import * as PIXI from 'pixi.js';
 import { Actor } from 'engine/entities/actor.entity';
-import { GameInput } from 'engine/inputs/game.inputs';
-import { JumpAction } from 'game/actions/jump.action';
+import { MovableActor } from 'engine/entities/mixins/movable.actor';
 
-export class Hero extends Actor {
+export class HeroBase extends Actor {
+
+  constructor() {
+    super();
+    this._displayObject = new PIXI.Sprite(PIXI.utils.TextureCache['sprites/token1.png']);
+  }
+  /*
 
   protected _activeJump: JumpAction;
   protected _jumpVelocity = -25;
   protected _maxVelocityX = 3;
 
-  constructor() {
-    super(true);
-    this._displayObject = new PIXI.Sprite(PIXI.utils.TextureCache['sprites/token1.png']);
-  }
-  /*
   protected _updatePosition(deltaTime: number): void {
     let velocity = new PIXI.Point(
       this._inputVelocity.x,
@@ -40,3 +40,5 @@ export class Hero extends Actor {
 
   */
 }
+
+export const Hero = MovableActor(HeroBase);
