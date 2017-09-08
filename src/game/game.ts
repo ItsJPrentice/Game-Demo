@@ -1,7 +1,7 @@
 import * as PIXI from 'pixi.js';
 import { AssetsManifestLoader } from 'game/utilities/assetsManifest.loader';
 import { LoopService } from 'engine/services/loop.service';
-import { Stage } from 'engine/entities/stage.entity';
+import { Stage } from 'engine/entities/stages/stage.entity';
 import { DefaultStage } from 'game/stages/default.stage';
 import { GamepadInputs } from 'engine/inputs/gamepad.inputs';
 import { KeyboardInputs } from 'engine/inputs/keyboard.inputs';
@@ -37,7 +37,7 @@ export class Game {
 
   private _update(deltaTime: number): void {
     this._stage.update(deltaTime);
-    this._renderer.render(this._stage.displayObject);
+    this._renderer.render(this._stage.container);
   }
 
 }

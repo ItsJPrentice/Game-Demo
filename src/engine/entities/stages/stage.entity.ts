@@ -1,16 +1,14 @@
 import * as PIXI from 'pixi.js';
 import * as _ from 'lodash';
 import { BehaviorSubject } from 'rxjs';
-import { Entity } from './entity';
-import { Fixture } from './fixture.entity';
-import { Prop } from './prop.entity';
-import { Actor } from './actor.entity';
+import { Entity } from 'engine/entities/entity';
+import { Fixture } from 'engine/entities/fixtures/fixture.entity';
+import { Prop } from 'engine/entities/props/prop.entity';
+import { Actor } from 'engine/entities/actors/actor.entity';
 import { Player } from 'engine/players/player';
 import { CollisionDetector } from 'engine/collisions/collisionDetector';
 
 export class Stage extends Entity {
-  
-  protected _displayObject: PIXI.Container;
 
   protected _collisionDetector: CollisionDetector;
   protected _fixtures = <Fixture[]>[];
@@ -20,16 +18,11 @@ export class Stage extends Entity {
 
   constructor() {
     super();
-    this._displayObject = new PIXI.Container();
     this._setupCollisionDetection();
     this._setupFixtures();
     this._setupProps();
     this._setupActors();
     this._setupPlayers();
-  }
-  
-  public get displayObject(): PIXI.Container {
-    return this._displayObject;
   }
   
   protected _setupFixtures(): void { }
@@ -38,9 +31,8 @@ export class Stage extends Entity {
   protected _setupPlayers(): void { }
 
   protected _addEntity(entity: Entity, position?: PIXI.Point): void {
-    this.displayObject.addChild(entity.displayObject);
-    if (position) entity.displayObject.position = position;
-    entity.collisionDetector = this._collisionDetector;
+    this.container.addChild(entity.container);
+    if (position) entity.container.position = position;
   }
   
   protected _addFixture(fixture: Fixture, position?: PIXI.Point): void {
@@ -68,7 +60,9 @@ export class Stage extends Entity {
 
   public update(deltaTime: number): void {
     _.each(_.concat(this._fixtures, this._props, this._actors), entity => entity.update(deltaTime));
-    this._collisionDetector.checkCollisions();
+    
+    // TODO: Refactor out into hitbox mixin
+    // this._collisionDetector.checkCollisions();
   }
 
 }

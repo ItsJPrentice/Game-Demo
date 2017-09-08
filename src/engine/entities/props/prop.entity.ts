@@ -1,4 +1,4 @@
-import { Entity } from './entity';
+import { Entity } from 'engine/entities/entity';
 
 export class Prop extends Entity {
 

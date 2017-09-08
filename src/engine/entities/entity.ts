@@ -6,31 +6,34 @@ import { Collision } from 'engine/collisions/collision';
 export class Entity {
   
   readonly id: string;
-  protected _displayObject: PIXI.DisplayObject;
-  protected _collisionDetector: CollisionDetector;
-  public isSolid: boolean;
+  protected _container = new PIXI.Container();
+  // TODO: Refactor out into hitbox mixin
+  // protected _collisionDetector: CollisionDetector;
+  // public isSolid: boolean;
 
   constructor(isSolid?: boolean) {
     this.id = UUID.v4();
-    this.isSolid = !!isSolid;
+    
+    // TODO: Refactor out into hitbox mixin
+    // this.isSolid = !!isSolid;
   }
 
-  public get displayObject(): PIXI.DisplayObject {
-    return this._displayObject;
+  public get container(): PIXI.Container {
+    return this._container;
   }
+  
+  public update(deltaTime: number): void { }
 
-  public set collisionDetector(collisionDetector: CollisionDetector) {
-    this._collisionDetector = collisionDetector;
-    this._collisionDetector.addStaticEntity(this);
-  }
+  // TODO: Refactor out into hitbox mixin
+  // public set collisionDetector(collisionDetector: CollisionDetector) {
+  //   this._collisionDetector = collisionDetector;
+  //   this._collisionDetector.addStaticEntity(this);
+  // }
 
-  public collide(collision: Collision): void {
-    this._onCollision(collision);
-  }
+  // public collide(collision: Collision): void {
+  //   this._onCollision(collision);
+  // }
 
-  protected _onCollision(collision: Collision): void { }
-
-  public update(deltaTime: number): void {
-  }
+  // protected _onCollision(collision: Collision): void { }
 
 }

@@ -1,7 +1,6 @@
 import * as _ from 'lodash';
 import { Constructor } from 'engine/utilities/constructor';
-import { Actor } from 'engine/entities/actor.entity';
-import { Prop } from 'engine/entities/prop.entity';
+import { Actor } from 'engine/entities/actors/actor.entity';
 
 export function MovableActor<T extends Constructor<Actor>>(Base: T) {
 

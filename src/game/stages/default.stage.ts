@@ -1,5 +1,5 @@
 import * as PIXI from 'pixi.js';
-import { Stage } from 'engine/entities/stage.entity';
+import { Stage } from 'engine/entities/stages/stage.entity';
 import { Player } from 'engine/players/player';
 import { Floor } from '../fixtures/floor.fixture';
 import { Wall } from '../fixtures/wall.fixture';

@@ -1,12 +1,17 @@
 import * as PIXI from 'pixi.js';
-import { Actor } from 'engine/entities/actor.entity';
-import { MovableActor } from 'engine/entities/mixins/movable.actor';
+import { Actor } from 'engine/entities/actors/actor.entity';
+import { MovableActor } from 'engine/entities/actors/_mixins/movable.actor';
 
-export class HeroBase extends Actor {
+class HeroBase extends Actor {
 
   constructor() {
     super();
-    this._displayObject = new PIXI.Sprite(PIXI.utils.TextureCache['sprites/token1.png']);
+    this._addSprite();
+  }
+
+  protected _addSprite(): void {
+    let sprite = new PIXI.Sprite(PIXI.utils.TextureCache['sprites/token1.png']);
+    this.container.addChild(sprite);
   }
   /*
 
