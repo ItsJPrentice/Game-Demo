@@ -1,21 +1,15 @@
 import * as PIXI from 'pixi.js';
 import * as UUID from 'uuid';
-import { CollisionDetector } from 'engine/collisions/collisionDetector';
-import { Collision } from 'engine/collisions/collision';
+import * as _ from 'lodash';
 
 export class Entity {
   
   readonly id: string;
-  protected _container = new PIXI.Container();
-  // TODO: Refactor out into hitbox mixin
-  // protected _collisionDetector: CollisionDetector;
-  // public isSolid: boolean;
+  private _container = new PIXI.Container();
+  protected _velocity = new PIXI.Point(0,0);
 
   constructor(isSolid?: boolean) {
     this.id = UUID.v4();
-    
-    // TODO: Refactor out into hitbox mixin
-    // this.isSolid = !!isSolid;
   }
 
   public get container(): PIXI.Container {
@@ -23,17 +17,25 @@ export class Entity {
   }
   
   public update(deltaTime: number): void { }
-
-  // TODO: Refactor out into hitbox mixin
-  // public set collisionDetector(collisionDetector: CollisionDetector) {
-  //   this._collisionDetector = collisionDetector;
-  //   this._collisionDetector.addStaticEntity(this);
-  // }
-
-  // public collide(collision: Collision): void {
-  //   this._onCollision(collision);
-  // }
-
-  // protected _onCollision(collision: Collision): void { }
+  
+  protected _getSprite(textureId: string, position?: PIXI.Point): PIXI.Sprite {
+    let sprite = new PIXI.Sprite(PIXI.utils.TextureCache[textureId]);
+    if (position) sprite.position = position;
+    return sprite;
+  }
+  
+  protected _getTilingSprite(textureId: string, width: number, height: number, position?: PIXI.Point): PIXI.Sprite {
+    let sprite = new PIXI.extras.TilingSprite(PIXI.utils.TextureCache[textureId]);
+    sprite.width = width;
+    sprite.height = height;
+    if (position) sprite.position = position;
+    return sprite;
+  }
+  
+  protected _getAnimatingSprite(textureIds: string[], position?: PIXI.Point): PIXI.extras.AnimatedSprite {
+    let sprite = new PIXI.extras.AnimatedSprite(_.map(textureIds, textureId => PIXI.utils.TextureCache[textureId]));
+    if (position) sprite.position = position;
+    return sprite;
+  }
 
 }

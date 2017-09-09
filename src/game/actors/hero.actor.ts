@@ -10,7 +10,7 @@ class HeroBase extends Actor {
   }
 
   protected _addSprite(): void {
-    let sprite = new PIXI.Sprite(PIXI.utils.TextureCache['sprites/token1.png']);
+    let sprite = this._getSprite('sprites/token1.png');
     this.container.addChild(sprite);
   }
   /*

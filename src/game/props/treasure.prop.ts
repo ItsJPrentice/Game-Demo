@@ -9,7 +9,7 @@ export class Treasure extends Prop {
   }
 
   protected _addSprite(): void {
-    let sprite = new PIXI.Sprite(PIXI.utils.TextureCache['sprites/token2.png']);
+    let sprite = this._getSprite('sprites/token2.png');
     this.container.addChild(sprite);
   }
 

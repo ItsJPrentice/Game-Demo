@@ -6,11 +6,11 @@ import { Fixture } from 'engine/entities/fixtures/fixture.entity';
 import { Prop } from 'engine/entities/props/prop.entity';
 import { Actor } from 'engine/entities/actors/actor.entity';
 import { Player } from 'engine/players/player';
-import { CollisionDetector } from 'engine/collisions/collisionDetector';
+import { PhysicsEngine } from 'engine/physicsEngine/physicsEngine';
 
 export class Stage extends Entity {
 
-  protected _collisionDetector: CollisionDetector;
+  protected _physicsEngine = new PhysicsEngine();
   protected _fixtures = <Fixture[]>[];
   protected _props = <Prop[]>[];
   protected _actors = <Actor[]>[];
@@ -18,7 +18,6 @@ export class Stage extends Entity {
 
   constructor() {
     super();
-    this._setupCollisionDetection();
     this._setupFixtures();
     this._setupProps();
     this._setupActors();
@@ -54,15 +53,8 @@ export class Stage extends Entity {
     this._players.push(player);
   }
 
-  protected _setupCollisionDetection(): void {
-    this._collisionDetector = new CollisionDetector();
-  }
-
   public update(deltaTime: number): void {
     _.each(_.concat(this._fixtures, this._props, this._actors), entity => entity.update(deltaTime));
-    
-    // TODO: Refactor out into hitbox mixin
-    // this._collisionDetector.checkCollisions();
   }
 
 }

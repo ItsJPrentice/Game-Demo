@@ -9,7 +9,7 @@ export class Monster extends Actor {
   }
 
   protected _addSprite(): void {
-    let sprite = new PIXI.Sprite(PIXI.utils.TextureCache['sprites/token3.png']);
+    let sprite = this._getSprite('sprites/token3.png');
     this.container.addChild(sprite);
   }
 
