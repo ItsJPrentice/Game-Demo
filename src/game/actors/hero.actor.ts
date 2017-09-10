@@ -1,8 +1,11 @@
 import * as PIXI from 'pixi.js';
 import { Actor } from 'engine/entities/actors/actor.entity';
+import { HasBody } from 'engine/entities/_mixins/hasBody.entity';
 import { MovableActor } from 'engine/entities/actors/_mixins/movable.actor';
 
-class HeroBase extends Actor {
+const BaseActor = HasBody(Actor);
+
+export class Hero extends BaseActor {
 
   constructor() {
     super();
@@ -45,5 +48,3 @@ class HeroBase extends Actor {
 
   */
 }
-
-export const Hero = MovableActor(HeroBase);
