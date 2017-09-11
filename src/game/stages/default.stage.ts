@@ -1,5 +1,6 @@
 import * as PIXI from 'pixi.js';
 import { Stage } from 'engine/entities/stages/stage.entity';
+import { HasPhysicsEngine } from 'engine/entities/_mixins/hasPhysicsEngine.entity';
 import { Player } from 'engine/players/player';
 import { Floor } from '../fixtures/floor.fixture';
 import { Wall } from '../fixtures/wall.fixture';
@@ -10,7 +11,7 @@ import { Monster } from '../actors/monster.actor';
 import { KeyboardInputs } from 'engine/inputs/keyboard.inputs';
 import { GamepadInputs } from 'engine/inputs/gamepad.inputs';
 
-export class DefaultStage extends Stage {
+export class DefaultStage extends HasPhysicsEngine(Stage) {
 
   private _hero: Hero;
 
@@ -39,13 +40,14 @@ export class DefaultStage extends Stage {
   protected _setupActors(): void {
     this._hero = new Hero();
     this._addEntity(this._hero, new PIXI.Point(128, 128));
+    this.physicsEngine.addPhysicsBody(this._hero.physicsBody);
     this._addEntity(new Monster(), new PIXI.Point(150, 150));
   }
   
   protected _setupPlayers(): void {
     let player1 = new Player();
     player1.input = new GamepadInputs().streams[0];
-    this._hero.input = player1.stream;
+    this._hero.inputSource = player1.stream;
   }
 
 }

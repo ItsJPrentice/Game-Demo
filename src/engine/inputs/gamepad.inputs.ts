@@ -2,6 +2,7 @@ import { Observable, BehaviorSubject } from 'rxjs';
 import * as _ from 'lodash';
 import { GameInputs, GameInput } from 'engine/inputs/game.inputs';
 import { GamepadInput, IGamepadState } from 'engine/inputs/generic/gamepad.input';
+import { Vector } from 'engine/math/vector';
 
 export class GamepadInputs extends GameInputs {
 
@@ -62,10 +63,7 @@ export class GamepadInputs extends GameInputs {
 
   private _mapGamepadState(state: IGamepadState): GameInput {
     return {
-      movements: {
-        x: Math.round(state.axes[0]),
-        y: Math.round(state.axes[1])
-      },
+      movement: new Vector(Math.round(state.axes[0]), Math.round(state.axes[1])),
       actions: {
         action1: state.buttons[0].pressed || state.buttons[3].pressed,
         action2: state.buttons[1].pressed || state.buttons[2].pressed

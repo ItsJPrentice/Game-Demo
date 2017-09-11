@@ -1,9 +1,5 @@
 import { Observable } from 'rxjs';
-
-export interface MovementInputs {
-  x: number,
-  y: number
-}
+import { Vector } from 'engine/math/vector';
 
 export interface ActionInputs {
   action1: boolean,
@@ -11,7 +7,7 @@ export interface ActionInputs {
 }
 
 export interface GameInput {
-  movements: MovementInputs,
+  movement: Vector,
   actions: ActionInputs
 }
 

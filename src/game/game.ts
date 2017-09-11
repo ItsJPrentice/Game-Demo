@@ -1,6 +1,6 @@
 import * as PIXI from 'pixi.js';
 import { AssetsManifestLoader } from 'game/utilities/assetsManifest.loader';
-import { LoopService } from 'engine/services/loop.service';
+import { Loop } from 'engine/loop/loop';
 import { Stage } from 'engine/entities/stages/stage.entity';
 import { DefaultStage } from 'game/stages/default.stage';
 import { GamepadInputs } from 'engine/inputs/gamepad.inputs';
@@ -22,7 +22,7 @@ export class Game {
   private _onAssetsLoaded(): void {
     this._setupRenderer();
     this._stage = new DefaultStage();
-    LoopService.loop.subscribe(delta => this._update(delta));
+    new Loop().stream.subscribe(delta => this._update(delta));
   }
 
   private _setupRenderer(): void {
@@ -35,8 +35,8 @@ export class Game {
     document.body.appendChild(this._renderer.view);
   }
 
-  private _update(deltaTime: number): void {
-    this._stage.update(deltaTime);
+  private _update(delta: number): void {
+    this._stage.update(delta);
     this._renderer.render(this._stage.container);
   }
 

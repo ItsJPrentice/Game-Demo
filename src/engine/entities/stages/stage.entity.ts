@@ -6,29 +6,21 @@ import { PhysicsEngine } from 'engine/physics/physicsEngine';
 
 export class Stage extends Entity {
 
-  protected _entities = new BehaviorSubject<Entity[]>([]);
-  protected _physicsEngine = new PhysicsEngine(
-    this._entities
-        .map(entities => _(entities)
-          .filter(entity => !!entity.body)
-          .map(entity => entity.body)
-          .value()
-        )
-  );
+  protected _entities = <Entity[]>[];
 
   constructor() {
     super();
+    this.updateStream.subscribe(delta => this._updateEntities(delta));
   }
 
   protected _addEntity(entity: Entity, position?: PIXI.Point): void {
     this.container.addChild(entity.container);
     if (position) entity.container.position = position;
-    this._entities.next(_.concat(this._entities.value, entity));
+    this._entities.push(entity);
   }
 
-  public update(delta: number): void {
-    _.each(this._entities.value, entity => entity.update(delta));
-    this._physicsEngine.update(delta);
+  private _updateEntities(delta: number): void {
+    _.each(this._entities, entity => entity.update(delta));
   }
 
 }

@@ -1,15 +1,13 @@
 import * as PIXI from 'pixi.js';
 import * as UUID from 'uuid';
 import * as _ from 'lodash';
-import { Body } from 'engine/physics/body';
+import { Subject, Observable } from 'rxjs';
 
 export class Entity {
   
   readonly id: string;
   private _container = new PIXI.Container();
-  protected _velocity = [0,0];
-  protected _body: Body | null = null;
-  protected _updateActions = <(() => void)[]>[];
+  private _updateStream = new Subject<number>();
 
   constructor() {
     this.id = UUID.v4();
@@ -18,13 +16,13 @@ export class Entity {
   public get container(): PIXI.Container {
     return this._container;
   }
-
-  public get body(): Body | null {
-    return this._body;
+  
+  public get updateStream(): Observable<number> {
+    return this._updateStream.asObservable();
   }
   
-  public update(deltaTime: number): void {
-    _.each(this._updateActions, updateAction => updateAction());
+  public update(delta: number): void {
+    this._updateStream.next(delta);
   }
 
   // TODO: Refactor into Sprite utility class
