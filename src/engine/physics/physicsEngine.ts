@@ -16,11 +16,15 @@ export class PhysicsEngine {
   constructor() {}
 
   public update(delta: number): void {
-    _.each(this._bodies, physicsBody => physicsBody.updateVelocity(delta, this.externalForces));
+    _.each(this._bodies, physicsBody => physicsBody.update(delta, this.externalForces));
   }
 
   public addPhysicsBody(body: PhysicsBody): void {
     this._bodies.push(body);
+  }
+  
+  private _detectCollisions(): void {
+    
   }
 
 }

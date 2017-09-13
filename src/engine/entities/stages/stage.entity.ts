@@ -15,7 +15,7 @@ export class Stage extends Entity {
 
   protected _addEntity(entity: Entity, position?: PIXI.Point): void {
     this.container.addChild(entity.container);
-    if (position) entity.container.position = position;
+    if (position) entity.setPosition(position);
     this._entities.push(entity);
   }
 

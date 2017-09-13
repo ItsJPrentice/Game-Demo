@@ -25,6 +25,10 @@ export class Entity {
     this._updateStream.next(delta);
   }
 
+  public setPosition(position: PIXI.Point): void {
+    this.container.position.copy(position);
+  }
+
   // TODO: Refactor into Sprite utility class
   
   protected _getSprite(textureId: string, position?: PIXI.Point): PIXI.Sprite {
