@@ -1,4 +1,5 @@
 import * as PIXI from 'pixi.js';
+import * as _ from 'lodash';
 import { Stage } from 'engine/entities/stages/stage.entity';
 import { HasPhysicsEngine } from 'engine/entities/_mixins/hasPhysicsEngine.entity';
 import { Player } from 'engine/players/player';
@@ -25,12 +26,22 @@ export class DefaultStage extends HasPhysicsEngine(Stage) {
 
   protected _setupFixtures(): void {
     this._addEntity(new Floor(256, 256), new PIXI.Point(0, 0));
-    this._addEntity(new Wall(240, 16), new PIXI.Point(0, 0));
-    this._addEntity(new Wall(16, 240), new PIXI.Point(240, 0));
-    this._addEntity(new Wall(240, 16), new PIXI.Point(16, 240));
-    this._addEntity(new Wall(16, 256), new PIXI.Point(0, 16));
-    this._addEntity(new Wall(16*3, 16), new PIXI.Point(16*3, 256 - 16*3));
     this._addEntity(new Explosion(), new PIXI.Point(16, 16));
+    this._addWalls();
+  }
+
+  protected _addWalls(): void {
+    let walls = [
+      { entity: new Wall(240, 16), position: new PIXI.Point(0, 0) },
+      { entity: new Wall(16, 240), position: new PIXI.Point(240, 0) },
+      { entity: new Wall(240, 16), position: new PIXI.Point(16, 240) },
+      { entity: new Wall(16, 256), position: new PIXI.Point(0, 16) },
+      { entity: new Wall(16*3, 16), position: new PIXI.Point(16*3, 256 - 16*3) }
+    ];
+    _.each(walls, wall => {
+      this._addEntity(wall.entity, wall.position);
+      this.physicsEngine.addPhysicsBody(wall.entity.physicsBody);
+    });
   }
 
   protected _setupProps(): void {

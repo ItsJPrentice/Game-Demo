@@ -18,8 +18,13 @@ export function HasPhysicsBody<T extends Constructor<Entity>>(Base: T) {
       return this._physicsBody;
     }
 
-    protected _setHitbox(hitbox: PIXI.Rectangle): void {
-      this.physicsBody.hitbox = hitbox;
+    protected _setHitbox(width: number, height: number): void {
+      this.physicsBody.hitbox = new PIXI.Rectangle(
+        this.container.position.x,
+        this.container.position.y,
+        width,
+        height
+      );
     }
     
     public setPosition(position: PIXI.Point): void {

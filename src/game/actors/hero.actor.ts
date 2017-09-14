@@ -11,7 +11,7 @@ export class Hero extends HasGameInput(HasPhysicsBody(Actor)) {
   constructor() {
     super();
     this._addSprite();
-    this._setHitbox(new PIXI.Rectangle(16,16));
+    this._setHitbox(16,16);
     this.inputStream.subscribe(input => this._onGameInput(input));
   }
 
