@@ -21,7 +21,7 @@ export class Hero extends HasGameInput(HasPhysicsBody(Actor)) {
   }
 
   protected _onGameInput(input: GameInput): void {
-    this.physicsBody.acceleration = input.movement.multipyScalar(this._speed);
+    this.physicsBody.acceleration = input.movement.multipyByScalar(this._speed);
   }
   
   /*

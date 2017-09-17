@@ -27,7 +27,7 @@ export class Vector {
     ]);
   }
   
-  public multipyScalar(n: number): Vector {
+  public multipyByScalar(n: number): Vector {
     return new Vector([
       this.x * n,
       this.y * n

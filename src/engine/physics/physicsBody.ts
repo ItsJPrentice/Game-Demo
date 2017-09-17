@@ -41,11 +41,11 @@ export class PhysicsBody {
   }
   
   private _updateVelocity(delta: number, externalForces: ExternalForces): void {
-    let weightVector: Vector = externalForces.gravity.multipyScalar(this._mass);
+    let weightVector: Vector = externalForces.gravity.multipyByScalar(this._mass);
     this._velocity = this._velocity
                         .add(weightVector)
                         .add(this.acceleration)
-                        .multipyScalar(delta);
+                        .multipyByScalar(delta);
   }
   
   private _updatePosition(delta: number, externalForces: ExternalForces): void {
