@@ -8,10 +8,10 @@ import { Collision } from 'engine/physics/collision';
 export class PhysicsBody {
   
   public position = new PIXI.Point();  
-  public acceleration: Vector = new Vector(0,0);
+  public acceleration = new Vector();
   public isFixed = false;
 
-  private _velocity = new Vector(0,0);
+  private _velocity = new Vector();
   private _mass = 1;
   private _drag = 1;
   private _minVelocityX: number | null = 5;
@@ -41,11 +41,11 @@ export class PhysicsBody {
   }
   
   private _updateVelocity(delta: number, externalForces: ExternalForces): void {
-    let weightVector: Vector = externalForces.gravity.multipyBy(this._mass);
+    let weightVector: Vector = externalForces.gravity.multipyScalar(this._mass);
     this._velocity = this._velocity
-                        .sum(weightVector)
-                        .sum(this.acceleration)
-                        .multipyBy(delta);
+                        .add(weightVector)
+                        .add(this.acceleration)
+                        .multipyScalar(delta);
   }
   
   private _updatePosition(delta: number, externalForces: ExternalForces): void {

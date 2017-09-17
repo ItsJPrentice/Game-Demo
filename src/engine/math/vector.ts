@@ -2,21 +2,43 @@ import * as _ from 'lodash';
 
 export class Vector {
 
-  public x = 0;
-  public y = 0;
+  private _vector: [number, number];
 
-  constructor(x?: number, y?: number) {
-    if (x) this.x = x;
-    if (x && !y) this.y = x;
-    if (y) this.y = y;
+  public get x(): number { return this._vector[0]; }
+  public get y(): number { return this._vector[1]; }
+  public get magnitude(): number { return this.x * this.x + this.y * this.y; }
+  public get normal(): number { return Math.sqrt(this.magnitude); }
+
+  constructor(vector: [number, number] = [0,0]) {
+    this._vector = vector;
   }
-
-  public sum(vector: Vector): Vector {
-    return new Vector(this.x + vector.x, this.y + vector.y);
+  
+  public add(vector: Vector): Vector {
+    return new Vector([
+      this.x + vector.x,
+      this.y + vector.y
+    ]);
   }
-
-  public multipyBy(n: number): Vector {
-    return new Vector(this.x * n, this.y * n);
+  
+  public subtract(vector: Vector): Vector {
+    return new Vector([
+      this.x - vector.x,
+      this.y - vector.y
+    ]);
+  }
+  
+  public multipyScalar(n: number): Vector {
+    return new Vector([
+      this.x * n,
+      this.y * n
+    ]);
+  }
+  
+  public divideScalar(n: number): Vector {
+    return new Vector([
+      this.x === 0 ? 0 : this.x / n,
+      this.x === 0 ? 0 : this.y / n
+    ]);
   }
 
 }

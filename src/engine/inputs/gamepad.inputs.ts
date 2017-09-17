@@ -63,7 +63,7 @@ export class GamepadInputs extends GameInputs {
 
   private _mapGamepadState(state: IGamepadState): GameInput {
     return {
-      movement: new Vector(Math.round(state.axes[0]), Math.round(state.axes[1])),
+      movement: new Vector([Math.round(state.axes[0]), Math.round(state.axes[1])]),
       actions: {
         action1: state.buttons[0].pressed || state.buttons[3].pressed,
         action2: state.buttons[1].pressed || state.buttons[2].pressed

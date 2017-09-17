@@ -10,7 +10,7 @@ export class PhysicsEngine {
   private _bodies = <PhysicsBody[]>[];
 
   public externalForces: ExternalForces = {
-    gravity: new Vector(0,.1),
+    gravity: new Vector([0,.1]),
     density: 1.2
   }
   
