@@ -1,15 +1,19 @@
 import { Observable } from 'rxjs';
 import * as _ from 'lodash';
 import { Vector } from 'engine/math/vector';
-import { PhysicsBody } from 'engine/physics/physicsBody';
-import { ExternalForces } from 'engine/physics/externalForces';
+import { Body } from 'engine/physics/body';
 import { Intersections } from 'engine/math/intersections';
 
-export class PhysicsEngine {
+export interface WorldForces {
+  gravity: Vector,
+  density: number
+}
 
-  private _bodies = <PhysicsBody[]>[];
+export class World {
+  
+  private _bodies = <Body[]>[];
 
-  public externalForces: ExternalForces = {
+  public worldForces: WorldForces = {
     gravity: new Vector([0,.1]),
     density: 1.2
   }
@@ -19,24 +23,25 @@ export class PhysicsEngine {
   private _bool = false;
 
   public update(delta: number): void {
-    _.each(this._bodies, physicsBody => physicsBody.update(delta, this.externalForces));
+    _.each(this._bodies, body => body.update(delta, this.worldForces));
     this._detectCollisions();
   }
 
-  public addPhysicsBody(body: PhysicsBody): void {
+  public addbody(body: Body): void {
     this._bodies.push(body);
   }
   
   private _detectCollisions(): void {
-    let movingBodies = _.filter(this._bodies, body => !body.isFixed && !!body.hitbox),
-        fixedBodies = _.filter(this._bodies, body => body.isFixed && !!body.hitbox);
+    let collidableBodies = _.filter(this._bodies, 'hitbox'),
+        movingBodies = _.filter(collidableBodies, body => !body.isFixed),
+        fixedBodies = _.filter(collidableBodies, body => body.isFixed);
     _.each(movingBodies, (body, index) => {
       _.each(movingBodies.slice(index), mBody => this._checkBodyCollision(body, mBody));
       _.each(fixedBodies, fBody => this._checkBodyCollision(body, fBody));
     });
   }
 
-  private _checkBodyCollision(body1: PhysicsBody, body2: PhysicsBody): void {
+  private _checkBodyCollision(body1: Body, body2: Body): void {
     if (Intersections.testRectangles(body1.hitbox, body2.hitbox)) {
       body1.collide(body2);
       body2.collide(body1);

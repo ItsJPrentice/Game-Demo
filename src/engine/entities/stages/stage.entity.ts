@@ -2,7 +2,6 @@ import * as PIXI from 'pixi.js';
 import * as _ from 'lodash';
 import { BehaviorSubject } from 'rxjs';
 import { Entity } from 'engine/entities/entity';
-import { PhysicsEngine } from 'engine/physics/physicsEngine';
 
 export class Stage extends Entity {
 

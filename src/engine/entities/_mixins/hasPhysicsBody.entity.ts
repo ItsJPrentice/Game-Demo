@@ -1,20 +1,20 @@
 import * as _ from 'lodash';
 import { Constructor } from 'engine/utilities/constructor';
 import { Entity } from 'engine/entities/entity';
-import { PhysicsBody } from 'engine/physics/physicsBody';
+import { Body } from 'engine/physics/body';
 
 export function HasPhysicsBody<T extends Constructor<Entity>>(Base: T) {
 
   return class extends Base {
     
-    private _physicsBody = new PhysicsBody(this.container.position);
+    private _physicsBody = new Body(this.container.position);
   
     constructor(...args: any[]) {
       super(...args);
       this.updateStream.subscribe(delta => this._updatePositionFromPhysicsBody());
     }
 
-    public get physicsBody(): PhysicsBody {
+    public get physicsBody(): Body {
       return this._physicsBody;
     }
 

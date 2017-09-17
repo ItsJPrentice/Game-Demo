@@ -8,6 +8,7 @@ export class Wall extends HasPhysicsBody(Fixture) {
     super();
     this._setSprite(width, height);
     this._setHitbox(width, height);
+    this.physicsBody.type = 'solid';
     this.physicsBody.isFixed = true;
   }
 

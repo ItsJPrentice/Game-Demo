@@ -1,7 +1,7 @@
 import * as PIXI from 'pixi.js';
 import * as _ from 'lodash';
 import { Stage } from 'engine/entities/stages/stage.entity';
-import { HasPhysicsEngine } from 'engine/entities/_mixins/hasPhysicsEngine.entity';
+import { HasPhysicsWorld } from 'engine/entities/_mixins/hasPhysicsWorld.entity';
 import { Player } from 'engine/players/player';
 import { Floor } from '../fixtures/floor.fixture';
 import { Wall } from '../fixtures/wall.fixture';
@@ -12,7 +12,7 @@ import { Monster } from '../actors/monster.actor';
 import { KeyboardInputs } from 'engine/inputs/keyboard.inputs';
 import { GamepadInputs } from 'engine/inputs/gamepad.inputs';
 
-export class DefaultStage extends HasPhysicsEngine(Stage) {
+export class DefaultStage extends HasPhysicsWorld(Stage) {
 
   private _hero: Hero;
 
@@ -40,7 +40,7 @@ export class DefaultStage extends HasPhysicsEngine(Stage) {
     ];
     _.each(walls, wall => {
       this._addEntity(wall.entity, wall.position);
-      this.physicsEngine.addPhysicsBody(wall.entity.physicsBody);
+      this.physicsWorld.addbody(wall.entity.physicsBody);
     });
   }
 
@@ -51,7 +51,7 @@ export class DefaultStage extends HasPhysicsEngine(Stage) {
   protected _setupActors(): void {
     this._hero = new Hero();
     this._addEntity(this._hero, new PIXI.Point(128, 128));
-    this.physicsEngine.addPhysicsBody(this._hero.physicsBody);
+    this.physicsWorld.addbody(this._hero.physicsBody);
     this._addEntity(new Monster(), new PIXI.Point(150, 150));
   }
   

@@ -1,15 +1,15 @@
 import { Subject, Observable } from 'rxjs';
 import * as _ from 'lodash';
 import { Vector } from 'engine/math/vector';
-import { ExternalForces } from 'engine/physics/externalForces';
-import {} from 'engine/physics/aabb';
+import { WorldForces } from 'engine/physics/world';
 import { Collision } from 'engine/physics/collision';
 
-export class PhysicsBody {
+export class Body {
   
   public position = new PIXI.Point();  
   public acceleration = new Vector();
   public isFixed = false;
+  public type: 'solid' | 'oneway' | 'empty' = 'empty';
 
   private _velocity = new Vector();
   private _mass = 1;
@@ -33,25 +33,25 @@ export class PhysicsBody {
     this.position.copy(position);
   }
 
-  public update(delta: number, externalForces: ExternalForces): void {
+  public update(delta: number, worldForces: WorldForces): void {
     if (!this.isFixed) {
-      this._updateVelocity(delta, externalForces);
-      this._updatePosition(delta, externalForces);
+      this._updateVelocity(delta, worldForces);
+      this._updatePosition(delta, worldForces);
     }
   }
   
-  private _updateVelocity(delta: number, externalForces: ExternalForces): void {
-    let weightVector: Vector = externalForces.gravity.multipyByScalar(this._mass);
+  private _updateVelocity(delta: number, worldForces: WorldForces): void {
+    let weightVector: Vector = worldForces.gravity.multipyByScalar(this._mass);
     this._velocity = this._velocity
                         .add(weightVector)
                         .add(this.acceleration)
                         .multipyByScalar(delta);
   }
   
-  private _updatePosition(delta: number, externalForces: ExternalForces): void {
+  private _updatePosition(delta: number, worldForces: WorldForces): void {
     this.position.set(
-      this.position.x + (this._velocity.x * delta),
-      this.position.y + (this._velocity.y * delta)
+      this.position.x + Math.round(this._velocity.x * delta), //Math.round to snap to pixels
+      this.position.y + Math.round(this._velocity.y * delta)
     );
     if (this.hitbox) {
       this.hitbox.x = this.position.x;
@@ -59,7 +59,7 @@ export class PhysicsBody {
     }
   }
 
-  public collide(body: PhysicsBody): void {
+  public collide(body: Body): void {
     console.log(this, 'collides with: ', body);
   }
 
