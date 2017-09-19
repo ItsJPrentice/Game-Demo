@@ -3,6 +3,8 @@ import { Actor } from 'engine/entities/actors/actor.entity';
 import { HasPhysicsBody } from 'engine/entities/_mixins/hasPhysicsBody.entity';
 import { HasGameInput } from 'engine/entities/_mixins/hasGameInput.entity';
 import { GameInput } from 'engine/inputs/game.inputs';
+import { Vector } from 'engine/math/vector';
+import { Rectangle } from 'engine/math/rectangle';
 
 export class Hero extends HasGameInput(HasPhysicsBody(Actor)) {
 
@@ -11,7 +13,7 @@ export class Hero extends HasGameInput(HasPhysicsBody(Actor)) {
   constructor() {
     super();
     this._addSprite();
-    this._setHitbox(16,16);
+    this._setHitbox();
     this.inputStream.subscribe(input => this._onGameInput(input));
   }
 
@@ -21,7 +23,11 @@ export class Hero extends HasGameInput(HasPhysicsBody(Actor)) {
   }
 
   protected _onGameInput(input: GameInput): void {
-    this.physicsBody.acceleration = input.movement.multipyByScalar(this._speed);
+    this.physicsBody.force = input.movement.multipyByScalar(this._speed);
+  }
+  
+  protected _getHitbox(): Rectangle {
+    return new Rectangle(new Vector([16,16]));
   }
   
   /*

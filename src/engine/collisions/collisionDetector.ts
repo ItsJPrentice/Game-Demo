@@ -1,114 +1,56 @@
 import * as PIXI from 'pixi.js';
 import * as _ from 'lodash';
-import { Entity } from 'engine/entities/entity';
-import { Collision } from './collision';
-import { ContactCache } from './contact.cache';
+import { Vector } from 'engine/math/vector';
+import { Rectangle } from 'engine/math/rectangle';
 
 export class CollisionDetector {
-
-  private _staticEntities = <Entity[]>[];
-  private _dynamicEntities = <Entity[]>[];
-  private _controlledEntities = <Entity[]>[];
-  private _contactCache = new ContactCache();
-
-  constructor() { }
-
-  // TODO: Refactor out into hitbox mixin
   
-  // public checkCollisions(): void {
-  //   _.each(this._controlledEntities, this._checkControlledEntities.bind(this));
-  //   _.each(this._dynamicEntities, this._checkDynamicEntities.bind(this));
-  // }
-  
-  // private _checkControlledEntities(entity: Entity, index: number): void {
-  //   _.each(_.slice(this._controlledEntities, index + 1),
-  //          controlledEntity => this._checkEntityCollision(entity, controlledEntity));
-  //   _.each(this._dynamicEntities,
-  //          dynamicEntity => this._checkEntityCollision(entity, dynamicEntity));
-  //   _.each(this._staticEntities,
-  //          staticEntity => this._checkEntityCollision(entity, staticEntity));
-  // }
-  
-  // private _checkDynamicEntities(entity: Entity, index: number): void {
-  //   _.each(_.slice(this._dynamicEntities, index + 1),
-  //          dynamicEntity => this._checkEntityCollision(entity, dynamicEntity));
-  // }
+  private constructor() { }
 
-  // public addStaticEntity(entity: Entity): void {
-  //   this._staticEntities.push(entity);
-  // }
+  public static sweptAABB(r1: Rectangle, r2: Rectangle): any {
+    let broadphaseBox = this.getBroadphaseBox(r1);
+    if (CollisionDetector.AABB(broadphaseBox, r2)) {
+      console.log('It\'s colliding yo');
+    }
+  }
+
+  public static getBroadphaseBox(r: Rectangle): Rectangle {
+    return new Rectangle(
+      new Vector([
+        r.velocity.x > 0 ? r.dimensions.x + r.velocity.x : r.dimensions.x - r.velocity.x,
+        r.velocity.y > 0 ? r.dimensions.y + r.velocity.y : r.dimensions.y - r.velocity.y,
+      ]),
+      new Vector([
+        r.velocity.x > 0 ? r.position.x : r.position.x + r.velocity.x,
+        r.velocity.y > 0 ? r.position.y : r.position.y + r.velocity.y,
+      ])
+    );
+  }
   
-  // public addDynamicEntity(entity: Entity): void {
-  //   this._dynamicEntities.push(entity);
-  // }
-  
-  // public addControlledEntity(entity: Entity): void {
-  //   this._controlledEntities.push(entity);
-  // }
+  public static AABB(r1: Rectangle, r2: Rectangle): boolean {
+    return (
+      r1.position.x < r2.position.x + r2.dimensions.x &&
+      r1.position.x + r1.dimensions.x > r2.position.x &&
+      r1.position.y < r2.position.y + r2.dimensions.y &&
+      r1.dimensions.y + r1.position.y > r2.position.y
+    );
+  }
 
-  // private _checkEntityCollision(entity1: Entity, entity2: Entity): void {
-  //   if (this._testIntersection(entity1.displayObject.getBounds(), entity2.displayObject.getBounds())) {
-  //     this._onEntityCollision(entity1, entity2);
-  //   } else {
-  //     this._tryClearCollision(entity1, entity2);
-  //   }
-  // }
+  /*
 
-  // private _testIntersection(r1: PIXI.Rectangle, r2: PIXI.Rectangle): boolean {
-  //   return !(
-  //            (r2.x >= (r1.x + r1.width))  ||
-  //            ((r2.x + r2.width) <= r1.x)  ||
-  //            (r2.y >= (r1.y + r1.height)) ||
-  //            ((r2.y + r2.height) <= r1.y)
-  //           );
-  // }
-  
-  // private _onEntityCollision(entity1: Entity, entity2: Entity): void {
-  //   if (this._contactCache.hasContact(entity1.id, entity2.id)) {
-  //     entity1.collide(new Collision(entity2, 'ongoing'));
-  //     entity2.collide(new Collision(entity1, 'ongoing'));
-  //   } else {
-  //     this._contactCache.setContact(entity1.id, entity2.id);
-  //     entity1.collide(new Collision(entity2, 'hit'));
-  //     entity2.collide(new Collision(entity1, 'hit'));
-  //   }
-  // }
-  
-  // private _tryClearCollision(entity1: Entity, entity2: Entity): void {
-  //   if (this._contactCache.hasContact(entity1.id, entity2.id)) {
-  //     this._contactCache.resetContact(entity1.id, entity2.id);
-  //     entity1.collide(new Collision(entity2, 'end'));
-  //     entity2.collide(new Collision(entity1, 'end'));
-  //   }
-  // }
+  public static testBroadphaseCollision(r1: PIXI.Rectangle, v1: Vector, r2: PIXI.Rectangle): boolean {
+    let broadphaseBox = this.getBroadphaseBox(r1);
+  }
 
-  // private _getSolids(): PIXI.Rectangle[] {
-  //   let solids =  _.concat(this._controlledEntities, this._dynamicEntities, this._staticEntities)
-  //                  .filter(entity => entity.isSolid)
-  //                  .map(entity => entity.displayObject.getBounds());
-  //   return solids;
-  // }
+  public static getBroadphaseBox(r: PIXI.Rectangle, v: Vector): PIXI.Rectangle {
+    return new PIXI.Rectangle(
+      r
+    );
+  }
 
-  // public getMaxVelocity(hitbox: PIXI.Rectangle, velocity: PIXI.Point): PIXI.Point {
-  //   let maxVelocity = velocity.clone(),
-  //       solids = this._getSolids();
-  //   if (maxVelocity.x !== 0) maxVelocity.x = this._getMaxAxisVelocity(hitbox, 'x', velocity.x, solids);
-  //   if (maxVelocity.y !== 0) maxVelocity.y = this._getMaxAxisVelocity(hitbox, 'y', velocity.y, solids);
-  //   return maxVelocity;
-  // }
+  public static getSweptAABB(r1: PIXI.Rectangle, r2: PIXI.Rectangle): any {
+  }
 
-  // private _getMaxAxisVelocity(hitbox: PIXI.Rectangle, axis: 'x' | 'y', v: number, solids: PIXI.Rectangle[]): number {
-  //   let testHitbox = hitbox.clone(),
-  //       hasIntersection = false,
-  //       isDesc = v > 0;
-  //   testHitbox[axis] += v;
-  //   _.each(solids, solid => {
-  //     if (this._testIntersection(testHitbox, solid)) {
-  //       isDesc ? v-- : v++;
-  //       hasIntersection = true;
-  //       return false;
-  //     } return true;
-  //   });
-  //   return (!hasIntersection || v === 0) ? v : this._getMaxAxisVelocity(hitbox, axis, v, solids);
-  // }
+  */
+
 }

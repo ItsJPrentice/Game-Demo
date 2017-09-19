@@ -11,7 +11,7 @@ export function HasPhysicsWorld<T extends Constructor<Entity>>(Base: T) {
   
     constructor(...args: any[]) {
       super(...args);
-      this.updateStream.subscribe(delta => this.physicsWorld.update(delta));
+      this.update$.subscribe(delta => this.physicsWorld.update(delta));
     }
 
     public get physicsWorld(): World {

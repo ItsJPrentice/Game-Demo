@@ -1,32 +1,43 @@
 import * as PIXI from 'pixi.js';
 import * as UUID from 'uuid';
 import * as _ from 'lodash';
-import { Subject, Observable } from 'rxjs';
+import { BehaviorSubject, Subject, Observable } from 'rxjs';
+import { Vector } from 'engine/math/vector';
 
 export class Entity {
   
   readonly id: string;
   private _container = new PIXI.Container();
-  private _updateStream = new Subject<number>();
+  private _update$ = new Subject<number>();
+  private _position$ = new BehaviorSubject<Vector>(new Vector());
 
   constructor() {
     this.id = UUID.v4();
+    this._position$.subscribe(position => this._updateContainerPosition(position));
   }
 
   public get container(): PIXI.Container {
     return this._container;
   }
   
-  public get updateStream(): Observable<number> {
-    return this._updateStream.asObservable();
+  public get update$(): Observable<number> {
+    return this._update$.asObservable();
+  }
+
+  public get position$(): Observable<Vector> {
+    return this._position$.asObservable();
   }
   
   public update(delta: number): void {
-    this._updateStream.next(delta);
+    this._update$.next(delta);
   }
 
-  public setPosition(position: PIXI.Point): void {
-    this.container.position.copy(position);
+  public setPosition(position: Vector): void {
+    this._position$.next(position);
+  }
+
+  private _updateContainerPosition(position: Vector): void {
+    this.container.position.set(position.x, position.y);
   }
 
   // TODO: Refactor into Sprite utility class

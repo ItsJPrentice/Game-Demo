@@ -1,7 +1,7 @@
 import * as PIXI from 'pixi.js';
 import * as _ from 'lodash';
-import { BehaviorSubject } from 'rxjs';
 import { Entity } from 'engine/entities/entity';
+import { Vector } from 'engine/math/vector';
 
 export class Stage extends Entity {
 
@@ -9,10 +9,10 @@ export class Stage extends Entity {
 
   constructor() {
     super();
-    this.updateStream.subscribe(delta => this._updateEntities(delta));
+    this.update$.subscribe(delta => this._updateEntities(delta));
   }
 
-  protected _addEntity(entity: Entity, position?: PIXI.Point): void {
+  protected _addEntity(entity: Entity, position?: Vector): void {
     this.container.addChild(entity.container);
     if (position) entity.setPosition(position);
     this._entities.push(entity);
