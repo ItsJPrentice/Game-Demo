@@ -2,7 +2,7 @@ import { Observable } from 'rxjs';
 import * as _ from 'lodash';
 import { Vector } from 'engine/math/vector';
 import { Body } from 'engine/physics/body';
-import { CollisionDetector } from 'engine/collisions/collisionDetector';
+import { CollisionDetector, SweptCollision } from 'engine/collisions/collisionDetector';
 
 export interface WorldForces {
   gravity: Vector,
@@ -51,17 +51,19 @@ export class World {
   private _getNextPosition(body: Body): Vector {
     let collision = this._getFixedCollision(body);
     return body.hitbox.position
-      .add(body.hitbox.velocity);
+      .add(body.hitbox.velocity.multipyByScalar(collision ? collision.entryTime : 1));
   }
   
-  private _getFixedCollision(body: Body): any {
-    return _(this._bodies)
+  private _getFixedCollision(body: Body): SweptCollision {
+    let collision: SweptCollision = null;
+    _(this._bodies)
       .filter(fBody => fBody.isFixed)
-      .find(fBody => CollisionDetector.sweptAABB(body.hitbox, fBody.hitbox));
-  }
-
-  private _checkBodyCollision(body1: Body, body2: Body): void {
-    CollisionDetector.sweptAABB(body1.hitbox, body2.hitbox);
+      .each(fBody => {
+        collision = CollisionDetector.trySweptAABB(body.hitbox, fBody.hitbox);
+        if (collision) return false;
+        return true;
+      });
+    return collision;
   }
 
 }
