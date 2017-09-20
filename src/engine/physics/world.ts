@@ -38,7 +38,7 @@ export class World {
   
   private _updateMovingBody(body: Body, delta: number): void {
     body.hitbox = body.hitbox.setVelocity(this._getNextVelocity(body, delta));
-    body.hitbox = body.hitbox.setPosition(this._getNextPosition(body));
+    this._moveBody(body);
   }
   
   private _getNextVelocity(body: Body, delta: number): Vector {
@@ -48,10 +48,14 @@ export class World {
       .multipyByScalar(delta);
   }
   
-  private _getNextPosition(body: Body): Vector {
+  private _moveBody(body: Body, rFrame: number = 1): void {
     let collision = this._getFixedCollision(body);
-    return body.hitbox.position
-      .add(body.hitbox.velocity.multipyByScalar(collision ? collision.entryTime : 1));
+    if (collision) {
+      body.hitbox = body.hitbox.setPosition(body.hitbox.position
+        .add(body.hitbox.velocity.multipyByScalar(collision.entryTime)));
+      body.collide(collision, rFrame - collision.entryTime);
+    }
+    body.hitbox = body.hitbox.setPosition(body.hitbox.position.add(body.hitbox.velocity));
   }
   
   private _getFixedCollision(body: Body): SweptCollision {

@@ -3,6 +3,7 @@ import * as _ from 'lodash';
 import { Vector } from 'engine/math/vector';
 import { Rectangle } from 'engine/math/rectangle';
 import { WorldForces } from 'engine/physics/world';
+import { SweptCollision } from 'engine/collisions/collisionDetector.ts';
 
 export class Body {
   
@@ -17,6 +18,30 @@ export class Body {
 
   public setPosition(position: Vector): void {
     this.hitbox = this.hitbox.setPosition(position);
+  }
+
+  public collide(collision: SweptCollision, rFrame: number): void {
+    this._slideCollisionResponse(collision, rFrame);
+  }
+  
+  private _slideCollisionResponse(collision: SweptCollision, rFrame: number): void {
+    let dotprod = (this.hitbox.velocity.x * collision.normal.y +
+                  this.hitbox.velocity.y * collision.normal.x) * rFrame;
+    this.hitbox = this.hitbox.setVelocity(new Vector([
+      dotprod * collision.normal.y,
+      dotprod * collision.normal.x
+    ]));
+  }
+  
+  private _pushCollisionResponse(collision: SweptCollision, rFrame: number): void {
+    let magnitude = this.hitbox.velocity.magnitude * rFrame,
+        dotprod = this.hitbox.velocity.x * collision.normal.y +
+                  this.hitbox.velocity.y * collision.normal.x;
+    if (dotprod !== 0) dotprod = dotprod > 0 ? 1 : -1;
+    this.hitbox = this.hitbox.setVelocity(new Vector([
+      dotprod * collision.normal.y * magnitude,
+      dotprod * collision.normal.x * magnitude
+    ]));
   }
   
   /*
