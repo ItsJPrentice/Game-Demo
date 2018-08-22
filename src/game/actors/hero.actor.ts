@@ -1,12 +1,11 @@
 import * as PIXI from 'pixi.js';
 import { Actor } from 'engine/entities/actors/actor.entity';
-import { HasPhysicsBody } from 'engine/entities/_mixins/hasPhysicsBody.entity';
 import { HasGameInput } from 'engine/entities/_mixins/hasGameInput.entity';
 import { GameInput } from 'engine/inputs/game.inputs';
 import { Vector } from 'engine/math/vector';
 import { Rectangle } from 'engine/math/rectangle';
 
-export class Hero extends HasGameInput(HasPhysicsBody(Actor)) {
+export class Hero extends HasGameInput(Actor) {
 
   protected _speed = .1;
 
@@ -22,8 +21,8 @@ export class Hero extends HasGameInput(HasPhysicsBody(Actor)) {
     this.container.addChild(sprite);
   }
 
-  protected _onGameInput(input: GameInput): void {
-    this.physicsBody.force = input.movement.multipyByScalar(this._speed);
+  protected _onGameInput(gameInput: GameInput): void {
+    this.physicsBody.force = gameInput.movement.multipyByScalar(this._speed);
   }
   
   protected _getHitbox(): Rectangle {

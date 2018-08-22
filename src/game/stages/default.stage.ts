@@ -57,8 +57,13 @@ export class DefaultStage extends HasPhysicsWorld(Stage) {
   }
   
   protected _setupPlayers(): void {
+    this._setupPlayer1();
+  }
+
+  protected _setupPlayer1(): void {
     let player1 = new Player();
-    player1.input = new GamepadInputs().streams[0];
+    player1.input = new KeyboardInputs().streams[0];
+    //player1.input = new GamepadInputs().streams[0];
     this._hero.inputSource = player1.stream;
   }
 

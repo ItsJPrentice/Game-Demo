@@ -61,13 +61,13 @@ export class KeyboardInputs extends GameInputs {
     return {
       movement: new Vector([
         (() => {
-          if (this._pressedKeys.has(inputMap.movements.down) && !this._pressedKeys.has(inputMap.movements.up)) return 1;
-          if (!this._pressedKeys.has(inputMap.movements.down) && this._pressedKeys.has(inputMap.movements.up)) return -1;
+          if (this._pressedKeys.has(inputMap.movements.right) && !this._pressedKeys.has(inputMap.movements.left)) return 1;
+          if (!this._pressedKeys.has(inputMap.movements.right) && this._pressedKeys.has(inputMap.movements.left)) return -1;
           return 0;
         })(),
         (() => {
-          if (this._pressedKeys.has(inputMap.movements.right) && !this._pressedKeys.has(inputMap.movements.left)) return 1;
-          if (!this._pressedKeys.has(inputMap.movements.right) && this._pressedKeys.has(inputMap.movements.left)) return -1;
+          if (this._pressedKeys.has(inputMap.movements.down) && !this._pressedKeys.has(inputMap.movements.up)) return 1;
+          if (!this._pressedKeys.has(inputMap.movements.down) && this._pressedKeys.has(inputMap.movements.up)) return -1;
           return 0;
         })()
       ]),
