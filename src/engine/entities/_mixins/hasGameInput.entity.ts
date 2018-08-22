@@ -1,4 +1,5 @@
-import { BehaviorSubject, Observable} from 'rxjs';
+import { BehaviorSubject, Observable, empty } from 'rxjs';
+import { switchMap } from 'rxjs/operators';
 import * as _ from 'lodash';
 import { Constructor } from 'engine/utilities/constructor';
 import { Entity } from 'engine/entities/entity';
@@ -8,8 +9,8 @@ export function HasGameInput<T extends Constructor<Entity>>(Base: T) {
 
   return class extends Base {
     
-    private _inputSource = new BehaviorSubject<Observable<GameInput>>(Observable.empty<GameInput>());
-    private _inputStream = this._inputSource.asObservable().switchMap(event => event);
+    private _inputSource = new BehaviorSubject<Observable<GameInput>>(empty());
+    private _inputStream = this._inputSource.asObservable().pipe(switchMap(event => event));
   
     constructor(...args: any[]) {
       super(...args);

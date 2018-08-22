@@ -1,6 +1,8 @@
 import * as PIXI from 'pixi.js';
-import { Observable, AjaxRequest, AjaxResponse } from 'rxjs';
+import { Observable } from 'rxjs';
+import { AjaxRequest, AjaxResponse } from 'rxjs/ajax';
 import * as _ from 'lodash';
+import { AjaxObservable } from 'rxjs/internal/observable/dom/AjaxObservable';
 
 interface ManifestEntry {
   id: string,
@@ -31,7 +33,7 @@ export class AssetsManifestLoader {
         method: 'GET',
         responseType: 'json'
       }
-      return Observable.ajax(request);
+      return new AjaxObservable(request);
     }
 
 }

@@ -1,4 +1,5 @@
-import { Observable, BehaviorSubject } from 'rxjs';
+import { Observable, BehaviorSubject, empty, fromEvent } from 'rxjs';
+import { map, switchMap } from 'rxjs/operators';
 import * as _ from 'lodash';
 import { GameInputs, GameInput } from 'engine/inputs/game.inputs';
 import { GamepadInput, IGamepadState } from 'engine/inputs/generic/gamepad.input';
@@ -9,24 +10,24 @@ export class GamepadInputs extends GameInputs {
   private _gamepadInputs: GamepadInput[] = [];
   
   private _inputs = [
-    new BehaviorSubject<Observable<GameInput>>(Observable.empty<GameInput>()),
-    new BehaviorSubject<Observable<GameInput>>(Observable.empty<GameInput>()),
-    new BehaviorSubject<Observable<GameInput>>(Observable.empty<GameInput>()),
-    new BehaviorSubject<Observable<GameInput>>(Observable.empty<GameInput>())
+    new BehaviorSubject<Observable<GameInput>>(empty()),
+    new BehaviorSubject<Observable<GameInput>>(empty()),
+    new BehaviorSubject<Observable<GameInput>>(empty()),
+    new BehaviorSubject<Observable<GameInput>>(empty())
   ];
 
   protected _streams: Observable<GameInput>[] = [
-    this._inputs[0].asObservable().switchMap(event => event),
-    this._inputs[1].asObservable().switchMap(event => event),
-    this._inputs[2].asObservable().switchMap(event => event),
-    this._inputs[3].asObservable().switchMap(event => event)
+    this._inputs[0].asObservable().pipe(switchMap(event => event)),
+    this._inputs[1].asObservable().pipe(switchMap(event => event)),
+    this._inputs[2].asObservable().pipe(switchMap(event => event)),
+    this._inputs[3].asObservable().pipe(switchMap(event => event))
   ];
 
   constructor() {
     super();
     _.each(this._getGamepads(), (gamepad, index) => this._mapGamepad(gamepad, index));
-    Observable.fromEvent(window, 'ongamepadconnected').subscribe((event: GamepadEvent) => this._onGamepadConnected(event));
-    Observable.fromEvent(window, 'ongamepaddisconnected').subscribe((event: GamepadEvent) => this._onGamepadDisconnected(event));
+    fromEvent(window, 'ongamepadconnected').subscribe((event: GamepadEvent) => this._onGamepadConnected(event));
+    fromEvent(window, 'ongamepaddisconnected').subscribe((event: GamepadEvent) => this._onGamepadDisconnected(event));
   }
 
   private _getGamepads(): Gamepad[] {
@@ -53,12 +54,12 @@ export class GamepadInputs extends GameInputs {
       this._inputs[index].next(this._getGamepadInputStream(index));
     } else {
       this._inputs[index] = new BehaviorSubject<Observable<GameInput>>(this._getGamepadInputStream(index));
-      this._streams[index] = this._inputs[0].asObservable().switchMap(event => event);
+      this._streams[index] = this._inputs[0].asObservable().pipe(switchMap(event => event));
     }
   }
 
   private _getGamepadInputStream(index: number): Observable<GameInput> {
-    return this._gamepadInputs[index] ? this._gamepadInputs[index].stream.map(state => this._mapGamepadState(state)) : Observable.empty<GameInput>();
+    return this._gamepadInputs[index] ? this._gamepadInputs[index].stream.pipe(map(state => this._mapGamepadState(state))) : empty();
   }
 
   private _mapGamepadState(state: IGamepadState): GameInput {

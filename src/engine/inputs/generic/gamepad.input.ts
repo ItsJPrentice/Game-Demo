@@ -1,4 +1,5 @@
-import { Observable, BehaviorSubject, Scheduler } from 'rxjs';
+import { Observable } from 'rxjs';
+import { map } from 'rxjs/operators';
 import * as _ from 'lodash';
 import { Loop } from 'engine/loop/loop';
 
@@ -14,7 +15,7 @@ export class GamepadInput {
 
   constructor(gamepad: Gamepad) {
     this._gamepad = gamepad;
-    this._stream = new Loop().stream.map(delta => this._getGamepadState());
+    this._stream = new Loop().stream.pipe(map(delta => this._getGamepadState()));
   }
 
   public get stream(): Observable<IGamepadState> {

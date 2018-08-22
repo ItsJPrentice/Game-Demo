@@ -1,4 +1,5 @@
-import { Observable, BehaviorSubject, Subscription } from 'rxjs';
+import { Observable, BehaviorSubject, empty } from 'rxjs';
+import { switchMap } from 'rxjs/operators';
 import { GameInput } from 'engine/inputs/game.inputs';
 
 export class Player {
@@ -7,8 +8,8 @@ export class Player {
   private _stream: Observable<GameInput>;
 
   constructor() {
-    this._input = new BehaviorSubject<Observable<GameInput>>(Observable.empty<GameInput>());
-    this._stream = this._input.asObservable().switchMap(event => event);
+    this._input = new BehaviorSubject<Observable<GameInput>>(empty());
+    this._stream = this._input.asObservable().pipe(switchMap(event => event));
   }
 
   public set input(input: Observable<GameInput>) {

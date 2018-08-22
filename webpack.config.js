@@ -62,7 +62,8 @@ module.exports = {
   plugins: [
     new HtmlWebpackPlugin({ title: 'Game Demo' }),
     new GenerateJsonPlugin('sprite-assets-manifest.json', getAssetsManifest())
-  ]
+  ],
+  mode: 'development'
 }
 
 function getAssetsManifest() {

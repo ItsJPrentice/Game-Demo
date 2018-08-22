@@ -1,4 +1,4 @@
-import { Observable } from 'rxjs';
+import { map } from 'rxjs/operators';
 import * as _ from 'lodash';
 import { KeyboardInput } from 'engine/inputs/generic/keyboard.input';
 import { GameInputs, GameInput } from 'engine/inputs/game.inputs';
@@ -54,7 +54,7 @@ export class KeyboardInputs extends GameInputs {
   }
 
   private _mapStream(inputMap: KeyboardInputMap, index: number): void {
-    this._streams[index] = new Loop().stream.map(() => this._getGameInputFromMap(inputMap));
+    this._streams[index] = new Loop().stream.pipe(map(() => this._getGameInputFromMap(inputMap)));
   }
 
   private _getGameInputFromMap(inputMap: KeyboardInputMap): GameInput {

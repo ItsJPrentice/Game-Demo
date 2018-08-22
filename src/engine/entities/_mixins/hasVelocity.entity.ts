@@ -7,11 +7,11 @@ export function HasMovement<T extends Constructor<Entity>>(Base: T) {
 
   return class extends Base {
     
-    public velocity = new Vector(0,0);
+    public velocity = new Vector([0,0]);
   
     constructor(...args: any[]) {
       super(...args);
-      this.updateStream.subscribe(delta => this._updatePositionFromVelocity(delta));
+      //this.updateStream.subscribe(delta => this._updatePositionFromVelocity(delta));
     }
     
     private _updatePositionFromVelocity(delta: number): void {
