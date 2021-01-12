@@ -5,8 +5,10 @@ const GenerateJsonPlugin = require('generate-json-webpack-plugin');
 const _ = require('lodash');
 
 module.exports = {
-  context: path.resolve(__dirname, 'src'),
+  mode: 'development',
+  devtool: 'inline-source-map',
   entry: './index.ts',
+  context: path.resolve(__dirname, 'src'),
   module: {
     rules: [
       {
@@ -19,7 +21,7 @@ module.exports = {
       },
       {
         test: /\.(png|svg|jpg|gif)$/,
-        loader: 'file-loader'
+        type: 'asset/resource'
       },
       {
         test: /\.scss$/,
@@ -34,7 +36,9 @@ module.exports = {
           }, {
             loader: 'sass-loader',
             options: {
-              includePaths: ['/styles'],
+              sassOptions: {
+                includePaths: ['/styles']
+              },
               sourceMap: true
             }
           }
@@ -45,6 +49,9 @@ module.exports = {
   },
   resolve: {
     extensions: ['.ts', '.js'],
+    fallback: {
+      'punycode': require.resolve('punycode/')
+    },
     modules: [
       path.resolve('./node_modules'),
       path.resolve('./src')
@@ -55,19 +62,15 @@ module.exports = {
     path: path.resolve(__dirname, 'dist'),
     publicPath: '/'
   },
-  devtool: 'inline-source-map',
-  devServer: {
-    contentBase: path.join(__dirname, 'dist')
-  },
   plugins: [
     new HtmlWebpackPlugin({ title: 'Game Demo' }),
     new GenerateJsonPlugin('sprite-assets-manifest.json', getAssetsManifest())
-  ],
-  mode: 'development'
+  ]
 }
 
 function getAssetsManifest() {
-  return walkFolder(path.resolve(__dirname, 'src/game/_assets'));
+  let assetsRoot = 'src/game/_assets/';
+  return walkFolder(path.resolve(__dirname, assetsRoot)).map(assetPath => '' + assetPath);
 }
 
 function walkFolder(dirPath) {

@@ -3,6 +3,7 @@ import { Observable } from 'rxjs';
 import { AjaxRequest, AjaxResponse } from 'rxjs/ajax';
 import * as _ from 'lodash';
 import { AjaxObservable } from 'rxjs/internal/observable/dom/AjaxObservable';
+import { ENGINE_METHOD_DIGESTS } from 'constants';
 
 interface ManifestEntry {
   id: string,
@@ -11,19 +12,23 @@ interface ManifestEntry {
 
 export class AssetsManifestLoader {
 
-  constructor() { }
+  private _loader: PIXI.Loader;
+
+  constructor() {
+    this._loader = new PIXI.Loader();
+  }
 
   public loadAssetsFromManifest(manifestPath: string, onAssetsLoaded: () => void): void {
     this._getAssetsManifest(manifestPath)
         .subscribe(response => {
           this._addAssetsFromManifest(response.response);
-          PIXI.loader.load(onAssetsLoaded);
+          this._loader.load(onAssetsLoaded);
         });
   }
 
   private _addAssetsFromManifest(manifest: ManifestEntry[]) {
     _.each(manifest, entry => {
-      PIXI.loader.add(entry, require('game/_assets/' + entry));
+      this._loader.add(entry, require('game/_assets/' + entry));
     });
   }
   
