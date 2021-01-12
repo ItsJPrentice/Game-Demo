@@ -49,15 +49,15 @@ export class Entity {
   }
   
   protected _getTilingSprite(textureId: string, width: number, height: number, position?: PIXI.Point): PIXI.Sprite {
-    let sprite = new PIXI.extras.TilingSprite(PIXI.utils.TextureCache[textureId]);
+    let sprite = new PIXI.TilingSprite(PIXI.utils.TextureCache[textureId]);
     sprite.width = width;
     sprite.height = height;
     if (position) sprite.position = position;
     return sprite;
   }
   
-  protected _getAnimatingSprite(textureIds: string[], position?: PIXI.Point): PIXI.extras.AnimatedSprite {
-    let sprite = new PIXI.extras.AnimatedSprite(_.map(textureIds, textureId => PIXI.utils.TextureCache[textureId]));
+  protected _getAnimatingSprite(textureIds: string[], position?: PIXI.Point): PIXI.AnimatedSprite {
+    let sprite = new PIXI.AnimatedSprite(_.map(textureIds, textureId => PIXI.utils.TextureCache[textureId]));
     if (position) sprite.position = position;
     return sprite;
   }

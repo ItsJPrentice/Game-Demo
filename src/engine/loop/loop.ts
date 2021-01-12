@@ -3,12 +3,15 @@ import { Subject, Observable } from 'rxjs';
 
 export class Loop {
 
-  private _stream: Observable<number>
+  private _stream: Observable<number>;
   
   constructor() {
-    let subject = new Subject<number>();
-    new PIXI.ticker.Ticker().add(delta => subject.next(delta)).start();
+    let subject = new Subject<number>(),
+        ticker = new PIXI.Ticker();
     this._stream = subject.asObservable();
+    ticker
+      .add(delta => subject.next(delta))
+      .start();
   }
 
   public get stream(): Observable<number> {

@@ -4,8 +4,8 @@ import * as _ from 'lodash';
 import { Loop } from 'engine/loop/loop';
 
 export interface IGamepadState {
-  axes: number[];
-  buttons: GamepadButton[];
+  axes: ReadonlyArray<number>;
+  buttons: readonly GamepadButton[];
 }
 
 export class GamepadInput {
